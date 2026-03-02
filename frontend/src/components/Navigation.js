@@ -1,12 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Moon, Sun, ExternalLink } from 'lucide-react';
+import { Moon, Sun, ExternalLink, User, LogOut } from 'lucide-react';
 import { Button } from './ui/button';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 export const Navigation = ({ showCTA = true }) => {
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
+  const { isAuthenticated, user, signOut, openAuthModal } = useAuth();
 
   return (
     <nav className="fixed top-0 w-full z-50 glass-nav">
@@ -56,14 +58,34 @@ export const Navigation = ({ showCTA = true }) => {
               )}
             </Button>
             
-            {showCTA && (
-              <Button 
-                onClick={() => navigate('/emi-simulator')}
-                className="premium-button"
-                data-testid="nav-start-planning-btn"
-              >
-                Start Planning
-              </Button>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-2">
+                <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-muted/50 border border-border">
+                  <User className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium truncate max-w-[100px]">
+                    {user?.name || user?.email?.split('@')[0]}
+                  </span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={signOut}
+                  className="rounded-full w-10 h-10 hover:bg-destructive/10 hover:text-destructive"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : (
+              showCTA && (
+                <Button 
+                  onClick={() => navigate('/emi-simulator')}
+                  className="premium-button"
+                  data-testid="nav-start-planning-btn"
+                >
+                  Start Planning
+                </Button>
+              )
             )}
           </div>
         </div>
