@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, DollarSign } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import Navigation from '../components/Navigation';
 import BasicLoanDetails from '../components/simulator/BasicLoanDetails';
 import EMIAdjustment from '../components/simulator/EMIAdjustment';
 import PeriodicPayments from '../components/simulator/PeriodicPayments';
@@ -10,12 +11,14 @@ import AdhocPayments from '../components/simulator/AdhocPayments';
 import PrepaymentCharges from '../components/simulator/PrepaymentCharges';
 import InvestmentComparison from '../components/simulator/InvestmentComparison';
 import ResultsDashboard from '../components/simulator/ResultsDashboard';
+import AdvancedOptionsToggle from '../components/simulator/AdvancedOptionsToggle';
 import { toast } from 'sonner';
 
 const EMISimulator = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Basic loan details
   const [loanAmount, setLoanAmount] = useState(5000000);
@@ -114,49 +117,30 @@ const EMISimulator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-stone-100">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 glass-effect border-b border-stone-200/50">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                onClick={() => navigate('/')}
-                className="rounded-full"
-                data-testid="back-to-home-btn"
-              >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                Back
-              </Button>
-              <div className="flex items-center space-x-2">
-                <div className="w-10 h-10 rounded-full bg-emerald-900 flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-xl font-bold text-emerald-900">EMI Simulator</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen">
+      <Navigation showCTA={false} />
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 mt-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl sm:text-5xl font-bold text-stone-900 mb-4">
-            Optimize Your Loan Repayment
-          </h1>
-          <p className="text-lg text-stone-600 mb-12 max-w-3xl">
-            Configure your loan details and repayment strategy below. See real-time comparisons 
-            between standard and optimized repayment scenarios.
-          </p>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-4">
+              Optimize Your{' '}
+              <span className="bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
+                Loan Repayment
+              </span>
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Configure your loan details below and discover how much you can save with smart prepayment strategies
+            </p>
+          </div>
 
           {/* Input Sections */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             <BasicLoanDetails
               loanAmount={loanAmount}
               setLoanAmount={setLoanAmount}
@@ -180,42 +164,45 @@ const EMISimulator = () => {
               tenureYears={tenureYears}
             />
 
-            <PeriodicPayments
-              periodicPayments={periodicPayments}
-              setPeriodicPayments={setPeriodicPayments}
-            />
+            <AdvancedOptionsToggle isOpen={showAdvanced} setIsOpen={setShowAdvanced}>
+              <PeriodicPayments
+                periodicPayments={periodicPayments}
+                setPeriodicPayments={setPeriodicPayments}
+              />
 
-            <AdhocPayments
-              adhocPayments={adhocPayments}
-              setAdhocPayments={setAdhocPayments}
-            />
+              <AdhocPayments
+                adhocPayments={adhocPayments}
+                setAdhocPayments={setAdhocPayments}
+              />
 
-            <PrepaymentCharges
-              prepaymentChargePercent={prepaymentChargePercent}
-              setPrepaymentChargePercent={setPrepaymentChargePercent}
-              prepaymentFixedFee={prepaymentFixedFee}
-              setPrepaymentFixedFee={setPrepaymentFixedFee}
-              prepaymentChargeYears={prepaymentChargeYears}
-              setPrepaymentChargeYears={setPrepaymentChargeYears}
-              prepaymentInclusive={prepaymentInclusive}
-              setPrepaymentInclusive={setPrepaymentInclusive}
-              bankPreference={bankPreference}
-              setBankPreference={setBankPreference}
-            />
+              <PrepaymentCharges
+                prepaymentChargePercent={prepaymentChargePercent}
+                setPrepaymentChargePercent={setPrepaymentChargePercent}
+                prepaymentFixedFee={prepaymentFixedFee}
+                setPrepaymentFixedFee={setPrepaymentFixedFee}
+                prepaymentChargeYears={prepaymentChargeYears}
+                setPrepaymentChargeYears={setPrepaymentChargeYears}
+                prepaymentInclusive={prepaymentInclusive}
+                setPrepaymentInclusive={setPrepaymentInclusive}
+                bankPreference={bankPreference}
+                setBankPreference={setBankPreference}
+              />
 
-            <InvestmentComparison
-              investmentReturn={investmentReturn}
-              setInvestmentReturn={setInvestmentReturn}
-            />
+              <InvestmentComparison
+                investmentReturn={investmentReturn}
+                setInvestmentReturn={setInvestmentReturn}
+              />
+            </AdvancedOptionsToggle>
 
             {/* Simulate Button */}
             <div className="flex justify-center pt-8">
               <Button
                 onClick={handleSimulate}
                 disabled={loading}
-                className="rounded-full px-12 py-6 text-lg bg-emerald-900 hover:bg-emerald-800 transition-all active:scale-95 shadow-lg"
+                className="premium-button text-lg h-16 px-12"
                 data-testid="simulate-btn"
               >
+                <Play className="w-5 h-5 mr-2" />
                 {loading ? 'Calculating...' : 'Run Simulation'}
               </Button>
             </div>
