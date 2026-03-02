@@ -1,0 +1,171 @@
+<analysis>**original_problem_statement**: 
+The user wants to build a production-ready fintech web application initially named Loan Freedom Planner, which has since been rebranded to **Plumage Capital Strategy Lab**.
+
+**Core Purpose**: A dynamic loan simulation and advisory platform for Indian users, allowing them to compare a standard loan repayment schedule against an optimized one with various prepayment strategies.
+
+**PRODUCT REQUIREMENTS**:
+-   **Branding**:
+    -   Name: Capital Strategy Lab with a byline by Plumage Consultancy.
+    -   Logo provided by the user to be integrated.
+    -   Brand Color: A specific gold/orange color () extracted from the logo.
+    -   Footer must contain a link to .
+-   **Tech Stack**:
+    -   Frontend: Next.js (React), TypeScript, Tailwind CSS, Recharts.
+    -   Backend: FastAPI (Python).
+    -   Database: PostgreSQL with Prisma (deferred for MVP, currently stateless).
+-   **UI/UX**:
+    -   Modern, premium, and fully responsive design.
+    -   Dark mode toggle.
+    -   Advanced optimization options (periodic payments, lump sum, etc.) should be grouped and collapsible.
+    -   Charts must be visually appealing and informative.
+-   **Core Functionality (EMI Simulator)**:
+    -   Inputs: Loan amount, interest rate, tenure, start date, etc.
+    -   Optimization Strategies: EMI adjustment, periodic additional principal, ad-hoc lump sum payments.
+    -   Bank Preference: Allow users to choose between reducing tenure or EMI upon prepayment.
+    -   Prepayment Charges: Modeled with fixed fee or percentage.
+-   **Simulation Engine**:
+    -   Must perform a month-by-month amortization.
+    -   Must handle all optimization strategies correctly.
+    -   Must track key metrics: interest saved, tenure saved, etc.
+-   **Prepay vs. Invest Module**:
+    -   Compare the financial benefit of prepaying the loan versus investing the same amounts.
+    -   Investment FV must be broken down by source (EMI adjustment, periodic, adhoc).
+    -   Must provide a clear recommendation.
+-   **Output & Visualizations**:
+    -   Side-by-side comparison table (Original vs. Optimized).
+    -   Visually appealing charts, including:
+        -   Outstanding principal over time.
+        -   Yearly principal vs. interest breakdown (as a 100% stacked area chart).
+        -   Cumulative interest paid comparison.
+        -   A Net Wealth Comparison chart showing the benefit of investing vs. prepaying.
+-   **Future Features (Deferred for MVP)**:
+    -   User accounts and saved scenarios.
+    -   PDF/Excel export.
+    -   Tax impact module.
+    -   Pages for Refinancing, Rent-vs-Buy, etc. (placeholders exist).
+
+**User's preferred language**: English
+
+**what currently exists?**
+A full-stack application with a Next.js frontend and a FastAPI backend. The application, now named Plumage Capital Strategy Lab, features a sophisticated loan simulation engine. It sports a modern, premium UI with a gold and dark color scheme, complete with a dark mode toggle. The core functionality allows users to input loan details and model various prepayment strategies, comparing the results to a standard repayment plan. The output is displayed through a dashboard with summary cards, a detailed comparison table, and several interactive charts powered by Recharts. The Prepay vs. Invest logic has been implemented and correctly calculates the future value of potential investments, breaking them down by source.
+
+**Last working item**:
+-   **Last item agent was working**: The agent was implementing the user's request for a more intuitive visualization of the Prepay vs. Invest scenario. This involved two main parts:
+    1.  Adding a third line to the cumulative interest chart to show Net Interest Paid After Investment Income, providing a clearer view of the investment's impact over time.
+    2.  Ensuring the backend calculation for the investment's Future Value (FV) tracks each contribution source (EMI adjustment, periodic payments, ad-hoc payments) independently to prevent incorrect aggregation.
+-   **Status**: IN PROGRESS
+-   **Agent Testing Done**: N
+-   **Which testing method agent to use?**: both
+-   **User Testing Done**: N
+
+**All Pending/In progress Issue list**:
+There are no outstanding bugs or issues other than the in-progress task.
+
+**In progress Task List**:
+-   **Task 1**: Complete the Net Wealth Comparison Visualization (Priority: P0)
+    -   **Where to resume**: The agent has already modified the backend () to calculate and provide the data for the new Net Interest After Investment Income chart line. The agent was in the process of updating the frontend component  to render this new data series in the . The next step is to finalize the rendering logic in that component, ensuring the new line has a distinct color, a legend entry, and is displayed correctly.
+    -   **What will be achieved with this?**: This will provide users with a powerful and intuitive chart that visually demonstrates the long-term financial advantage of either prepaying their loan or investing the extra funds, fulfilling a key user request for clearer insights.
+    -   **Status**: IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?**: both
+    -   **Blocked on something**: No.
+
+**Upcoming and Future Tasks**
+-   **Upcoming Tasks**:
+    -   **P1**: Implement PDF export functionality for the simulation summary.
+    -   **P1**: Implement Excel export for the detailed amortization schedule.
+-   **Future Tasks**:
+    -   Implement the Tax Impact Module as an optional toggle for home loans.
+    -   Build out the Available Soon pages: , , etc.
+    -   Implement user authentication to allow for saving and comparing different loan scenarios.
+    -   Develop premium features as part of future monetization.
+
+**Completed work in this session**
+-   **Branding and UI/UX Overhaul**:
+    -   Renamed the application to Plumage Capital Strategy Lab and updated all relevant text and metadata.
+    -   Completely revamped the UI to a modern, premium design using the user's logo and a gold () and dark theme.
+    -   Implemented a functional dark mode toggle with a .
+    -   Grouped advanced simulation inputs into a collapsible section for a cleaner user experience.
+    -   Added a footer with a link to the user's main consultancy website.
+-   **Critical Calculation Bug Fixes**:
+    -   Resolved a major bug where the simulated original loan tenure was incorrect due to a floating-point precision error in the interest rate calculation.
+    -   Corrected the Prepay vs. Invest logic to compound investments over the full *original* loan tenure, ensuring a fair and accurate comparison.
+-   **Feature Enhancements**:
+    -   **Investment Breakdown**: The Prepay vs. Invest module now shows a detailed breakdown of the total investment future value, attributing gains to each source (EMI adjustments, periodic payments, and ad-hoc payments).
+    -   **Chart Improvements**: All charts were redesigned to be more attractive and readable, using gradient fills, rounded bars, and improved tooltips. The Yearly Breakdown chart was changed to a 100% stacked area chart as requested.
+-   **Code and Documentation**:
+    -   Created  to explain the complex Future Value calculation methodology.
+    -   Fixed various minor UI bugs, such as invisible text in dark mode.
+
+**Earlier issues found/mentioned but not fixed**
+-   None. The agent has successfully addressed all issues raised by the user so far.
+
+**Known issue recurrence from previous fork**
+-   None.
+
+**Code Architecture**
+
+
+**Key Technical Concepts**
+-   **Frontend**: Next.js (React), Tailwind CSS for styling, Recharts for data visualization.
+-   **Backend**: FastAPI (Python) for the simulation engine.
+-   **Architecture**: A stateless API-first design. The core financial logic is encapsulated within the  on the backend, ensuring separation of concerns.
+-   **UI/UX**: The application uses a React Context () to manage the light/dark theme, which is applied globally via Tailwind's  variant class.
+
+**key DB schema**
+-   None. The application is currently stateless and does not use a database.
+
+**changes in tech stack**
+-   None.
+
+**All files of reference**
+-   : The heart of the application. Contains all financial logic for amortization, prepayments, and investment calculations. Recently updated for the Net Wealth chart data.
+-   : The primary frontend component for displaying all simulation outputs, including tables and charts. This is the file currently being modified to add the new chart visualization.
+-   : The main page component that manages the state of all user inputs and passes them to the backend API.
+-   : Contains the CSS variables for both light and dark themes, including the brand's primary gold color.
+-   : Manages the application-wide theme state (light/dark).
+
+**Areas that need refactoring**:
+-   The  component has grown quite large. It could be beneficial to break it down into smaller, single-purpose components (e.g., one component per chart) to improve readability and maintainability.
+
+**key api endpoints**
+-   : The sole API endpoint. It accepts a JSON payload with all loan and prepayment parameters and returns a comprehensive JSON object with all data needed for the frontend to render the comparison dashboard and charts.
+
+**Critical Info for New Agent**
+-   **Focus on Visualization**: The current task is to complete the Net Wealth Comparison chart. The user has a high standard for UI/UX, so the visual representation of this data is critical. Ensure the new chart is clear, attractive, and provides an immediate aha! moment for the user.
+-   **Maintain UI Quality**: The user is very pleased with the new modern, premium UI. Adhere strictly to the established design system (gold accents, dark theme, spacing, etc.) for any new elements.
+-   **Calculation Accuracy is Key**: The application's core value is its financial accuracy. Double-check all calculations, especially when modifying the . The Prepay vs. Invest logic is complex and has been fixed multiple times; be cautious when touching it.
+
+**documents and test reports created in this job**
+-   
+-   
+
+**Last 10 User Messages and any pending HUMAN messages**
+1.  **User**: Requested a new chart to better visualize the net benefit of investing versus prepaying, including a net interest line adjusted for investment income. (Status: IN PROGRESS)
+2.  **User**: Requested the investment future value be broken down by source (EMI, periodic, adhoc) and for a bug in the prepayment charge tenure to be fixed. (Status: COMPLETED)
+3.  **User**: Identified a critical bug in the investment future value calculation with a specific example. (Status: COMPLETED)
+4.  **User**: Requested a branding update to Capital Strategy Lab by Plumage Consultancy. (Status: COMPLETED)
+5.  **User**: Requested app name change, footer link, metadata updates, dark mode text fixes, a chart type change, and an explanation of the investment calculation. (Status: COMPLETED)
+6.  **User**: Criticized the charts and questioned the investment calculation logic. (Status: COMPLETED)
+7.  **User**: Criticized the initial UI and requested a complete modernization with a new logo, brand color, dark mode, and collapsible sections. (Status: COMPLETED)
+8.  **User**: Identified a critical calculation bug where tenure savings were illogical. (Status: COMPLETED)
+9.  **User**: Approved default choices and instructed the agent to proceed. (Status: COMPLETED)
+10. **User**: Initial prompt to begin the task. (Status: COMPLETED)
+
+**Project Health Check:**
+-   **Broken**: The  on the  may be in an inconsistent state as the agent was interrupted mid-edit. This is the first thing the next agent should address.
+-   **Mocked**: N/A
+
+**3rd Party Integrations**
+-   None.
+
+**Testing status**
+-   **Testing agent used after significant changes**: YES
+-   **Troubleshoot agent used after agent stuck in loop**: NO
+-   **Test files created**: None
+-   **Known regressions**: None
+
+**Credentials to test flow:**
+-   N/A
+
+**What agent forgot to execute**
+-   The agent did not forget to execute any tasks but was interrupted while implementing the user's latest request for the Net Wealth Comparison chart. This task needs to be completed.</analysis>

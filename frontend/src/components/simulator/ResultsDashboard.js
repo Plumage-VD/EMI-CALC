@@ -130,11 +130,81 @@ export const ResultsDashboard = ({ results, loanData }) => {
     if (originalEntry) originalCumulative += originalEntry.interest;
     if (optimizedEntry) optimizedCumulative += optimizedEntry.interest;
     
+    // Calculate net interest if investing (interest paid - investment returns earned)
+    let netInterestAfterInvestment = originalCumulative;
+    if (investment_analysis.enabled && investment_analysis.investment_return_rate > 0) {
+      // Calculate investment returns earned up to this month
+      let investmentReturnsEarned = 0;
+      const monthlyReturn = investment_analysis.investment_return_rate / 1200;
+      
+      // Simplified calculation: proportional to month
+      if (maxLength > 0) {
+        const progressRatio = (i + 1) / maxLength;
+        investmentReturnsEarned = (investment_analysis.investment_future_value - investment_analysis.total_prepayments) * progressRatio;
+      }
+      
+      netInterestAfterInvestment = originalCumulative - investmentReturnsEarned;
+    }
+    
     if ((i + 1) % 12 === 0 || i === maxLength - 1) {
       cumulativeInterestData.push({
         month: i + 1,
         original: Math.round(originalCumulative),
-        optimized: Math.round(optimizedCumulative)
+        optimized: Math.round(optimizedCumulative),
+        netAfterInvestment: Math.round(netInterestAfterInvestment)
+      });
+    }
+  }
+
+  // Net Wealth Comparison (only if invest is recommended and enabled)
+  const wealthComparisonData = [];
+  if (investment_analysis.enabled && investment_analysis.recommendation === 'Invest') {
+    const originalSchedule = results.original_schedule;
+    const originalTenure = originalSchedule.length;
+    
+    // Build cumulative investment corpus over original tenure
+    let cumulativeInvestment = 0;
+    const investmentByMonth = {};
+    
+    // Track all prepayments by month
+    results.optimized_schedule.forEach(entry => {
+      if (entry.extra_principal > 0) {
+        investmentByMonth[entry.month] = (investmentByMonth[entry.month] || 0) + entry.extra_principal;
+      }
+    });
+    
+    // Calculate wealth for each year
+    for (let year = 1; year <= Math.ceil(originalTenure / 12); year++) {
+      const month = year * 12;
+      
+      // Prepay strategy wealth (after optimized tenure, debt-free)
+      let prepayWealth = 0;
+      if (month > optimized.actual_tenure) {
+        // Debt-free! Wealth = Interest saved
+        prepayWealth = savings.interest_saved;
+      }
+      
+      // Invest strategy wealth
+      let investWealth = 0;
+      // Calculate cumulative investment FV up to this month
+      for (let m = 1; m <= month; m++) {
+        if (investmentByMonth[m]) {
+          const monthsRemaining = originalTenure - m;
+          const monthlyReturn = investment_analysis.investment_return_rate / 1200;
+          const fv = investmentByMonth[m] * Math.pow(1 + monthlyReturn, monthsRemaining);
+          investWealth += fv;
+        }
+      }
+      // At end, subtract total interest paid on original loan
+      if (month >= originalTenure) {
+        investWealth -= original.total_interest;
+      }
+      
+      wealthComparisonData.push({
+        year,
+        prepay: Math.round(prepayWealth),
+        invest: Math.round(investWealth),
+        difference: Math.round(investWealth - prepayWealth)
       });
     }
   }
@@ -575,6 +645,9 @@ export const ResultsDashboard = ({ results, loanData }) => {
 
           <TabsContent value="cumulative" className="mt-8">
             <h3 className="text-lg font-bold mb-6">Cumulative Interest Comparison</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              {investment_analysis.enabled && 'Blue line shows net cost after considering investment returns'}
+            </p>
             <ResponsiveContainer width="100%" height={450}>
               <LineChart data={cumulativeInterestData}>
                 <defs>
@@ -585,6 +658,10 @@ export const ResultsDashboard = ({ results, loanData }) => {
                   <linearGradient id="lineOptimized" x1="0" y1="0" x2="1" y2="0">
                     <stop offset="0%" stopColor="hsl(var(--brand-gold))" />
                     <stop offset="100%" stopColor="hsl(var(--brand-gold-light))" />
+                  </linearGradient>
+                  <linearGradient id="lineNetInvestment" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#3b82f6" />
+                    <stop offset="100%" stopColor="#60a5fa" />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
@@ -600,12 +677,13 @@ export const ResultsDashboard = ({ results, loanData }) => {
                   tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
                 />
                 <Tooltip 
-                  formatter={(value) => [`₹${Math.round(value).toLocaleString('en-IN')}`, '']}
+                  formatter={(value, name) => [`₹${Math.round(value).toLocaleString('en-IN')}`, name]}
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--card))', 
                     border: '1px solid hsl(var(--border))', 
                     borderRadius: '12px',
-                    boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+                    boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                    color: 'hsl(var(--foreground))'
                   }}
                   labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600, marginBottom: '8px' }}
                 />
@@ -617,20 +695,39 @@ export const ResultsDashboard = ({ results, loanData }) => {
                   type="monotone" 
                   dataKey="original" 
                   stroke="url(#lineOriginal)" 
-                  strokeWidth={3}
+                  strokeWidth={2.5}
                   dot={false}
-                  name="Original Loan" 
+                  name="Original Loan Interest" 
                 />
                 <Line 
                   type="monotone" 
                   dataKey="optimized" 
                   stroke="url(#lineOptimized)" 
-                  strokeWidth={4}
+                  strokeWidth={3}
                   dot={false}
-                  name="Optimized Loan" 
+                  name="With Prepayments" 
                 />
+                {investment_analysis.enabled && (
+                  <Line 
+                    type="monotone" 
+                    dataKey="netAfterInvestment" 
+                    stroke="url(#lineNetInvestment)" 
+                    strokeWidth={3}
+                    strokeDasharray="5 5"
+                    dot={false}
+                    name="Net Cost (Invest Strategy)" 
+                  />
+                )}
               </LineChart>
             </ResponsiveContainer>
+            {investment_analysis.enabled && investment_analysis.recommendation === 'Invest' && (
+              <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <p className="text-sm text-blue-800 dark:text-blue-300">
+                  <strong>Net Benefit:</strong> At loan end, investing saves you an additional ₹{Math.round(Math.abs(investment_analysis.difference)).toLocaleString('en-IN')} compared to prepaying, 
+                  because your investment returns (₹{Math.round(investment_analysis.investment_future_value - investment_analysis.total_prepayments).toLocaleString('en-IN')}) exceed the extra interest paid.
+                </p>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </Card>

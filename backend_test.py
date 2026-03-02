@@ -13,7 +13,7 @@ from typing import Dict, Any
 
 class LoanPlannerAPITester:
     def __init__(self):
-        self.base_url = "https://loan-strategy-engine.preview.emergentagent.com"
+        self.base_url = "https://wealth-optimizer-11.preview.emergentagent.com"
         self.api_base = f"{self.base_url}/api"
         self.tests_run = 0
         self.tests_passed = 0

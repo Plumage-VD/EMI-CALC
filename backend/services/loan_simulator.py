@@ -309,10 +309,10 @@ class LoanSimulator:
     def _calculate_investment_comparison(self, optimized_schedule: Dict, original_tenure: int) -> Dict:
         """Calculate prepay vs invest comparison with detailed breakdown
         
-        Breaks down FV by source:
-        1. EMI Adjustment (extra EMI paid monthly)
-        2. Periodic Payments (recurring prepayments)
-        3. Adhoc Payments (one-time lump sums)
+        Tracks each prepayment source INDEPENDENTLY:
+        1. EMI Adjustment: Extra EMI paid each month
+        2. Periodic Payments: Recurring prepayments (completely separate)
+        3. Adhoc Payments: One-time lump sums (completely separate)
         """
         if self.investment_return == 0:
             return {
@@ -321,8 +321,9 @@ class LoanSimulator:
         
         schedule = optimized_schedule['schedule']
         monthly_return = self.investment_return / Decimal('1200')
+        standard_emi = self.calculate_standard_emi()
         
-        # Track FV by source
+        # Track each source INDEPENDENTLY
         emi_adjustment_fv = Decimal('0')
         periodic_payments_fv = Decimal('0')
         adhoc_payments_fv = Decimal('0')
@@ -331,69 +332,62 @@ class LoanSimulator:
         periodic_payments_total = Decimal('0')
         adhoc_payments_total = Decimal('0')
         
-        # Standard EMI for comparison
-        standard_emi = self.calculate_standard_emi()
-        
-        for entry in schedule:
-            extra_principal = Decimal(str(entry.get('extra_principal', 0)))
+        # 1. Calculate EMI Adjustment FV (if adjusted EMI is used)
+        if self.adjusted_emi and self.adjusted_emi > standard_emi:
+            extra_emi_per_month = self.adjusted_emi - standard_emi
             
-            if extra_principal > Decimal('0'):
-                remaining_months = original_tenure - entry['month']
+            for entry in schedule:
+                month = entry['month']
+                remaining_months = original_tenure - month
                 
-                if remaining_months <= 0:
-                    continue
-                
-                # Calculate FV for this payment
-                if monthly_return > 0:
-                    fv_multiplier = (1 + monthly_return) ** remaining_months
-                else:
-                    fv_multiplier = Decimal('1')
-                
-                # Determine the source of this prepayment
-                current_emi = Decimal(str(entry.get('emi', standard_emi)))
-                emi_principal = Decimal(str(entry.get('emi_principal', 0)))
-                
-                # EMI adjustment component (if EMI > standard EMI)
-                if current_emi > standard_emi:
-                    emi_adjustment_amount = emi_principal - (standard_emi - Decimal(str(entry.get('interest', 0))))
-                    if emi_adjustment_amount > Decimal('0'):
-                        # Cap at extra_principal to avoid double counting
-                        emi_adjustment_amount = min(emi_adjustment_amount, extra_principal)
-                        emi_adjustment_total += emi_adjustment_amount
-                        emi_adjustment_fv += emi_adjustment_amount * fv_multiplier
-                        extra_principal -= emi_adjustment_amount
-                
-                # Remaining extra_principal is from periodic or adhoc
-                if extra_principal > Decimal('0'):
-                    # Check if this month has adhoc payment
-                    payment_date = entry.get('date', '')
-                    has_adhoc = False
+                if remaining_months > 0 and monthly_return > 0:
+                    fv = extra_emi_per_month * ((1 + monthly_return) ** remaining_months)
+                    emi_adjustment_fv += fv
+                    emi_adjustment_total += extra_emi_per_month
+        
+        # 2. Calculate Periodic Payments FV (independent of EMI adjustment)
+        for payment_config in self.periodic_payments:
+            amount = Decimal(str(payment_config['amount']))
+            start_period = int(payment_config['start_period'])
+            occurrences = int(payment_config['occurrences'])
+            frequency = payment_config['frequency']
+            
+            frequency_map = {'monthly': 1, 'quarterly': 3, 'half_yearly': 6, 'yearly': 12}
+            interval = frequency_map.get(frequency, 1)
+            
+            for i in range(occurrences):
+                payment_month = start_period + (i * interval)
+                if payment_month <= original_tenure:
+                    remaining_months = original_tenure - payment_month
                     
-                    if payment_date:
-                        # Extract year-month from payment date
-                        try:
-                            from datetime import datetime
-                            payment_dt = datetime.strptime(payment_date, '%Y-%m-%d')
-                            payment_year_month = f"{payment_dt.year}-{payment_dt.month:02d}"
-                            
-                            for adhoc in self.adhoc_payments:
-                                adhoc_date = adhoc['date']
-                                adhoc_dt = datetime.strptime(adhoc_date, '%Y-%m-%d')
-                                adhoc_year_month = f"{adhoc_dt.year}-{adhoc_dt.month:02d}"
-                                
-                                if payment_year_month == adhoc_year_month:
-                                    # This is adhoc payment
-                                    adhoc_payments_total += extra_principal
-                                    adhoc_payments_fv += extra_principal * fv_multiplier
-                                    has_adhoc = True
-                                    break
-                        except:
-                            pass
+                    if remaining_months > 0 and monthly_return > 0:
+                        fv = amount * ((1 + monthly_return) ** remaining_months)
+                        periodic_payments_fv += fv
+                        periodic_payments_total += amount
+        
+        # 3. Calculate Adhoc Payments FV (independent of everything)
+        for adhoc in self.adhoc_payments:
+            amount = Decimal(str(adhoc['amount']))
+            adhoc_date = adhoc['date']
+            
+            # Find which month this payment occurs in
+            from datetime import datetime
+            try:
+                adhoc_dt = datetime.strptime(adhoc_date, '%Y-%m-%d')
+                start_dt = self.loan_start_date
+                
+                months_diff = (adhoc_dt.year - start_dt.year) * 12 + (adhoc_dt.month - start_dt.month)
+                payment_month = months_diff + 1
+                
+                if payment_month > 0 and payment_month <= original_tenure:
+                    remaining_months = original_tenure - payment_month
                     
-                    if not has_adhoc:
-                        # This is periodic payment
-                        periodic_payments_total += extra_principal
-                        periodic_payments_fv += extra_principal * fv_multiplier
+                    if remaining_months > 0 and monthly_return > 0:
+                        fv = amount * ((1 + monthly_return) ** remaining_months)
+                        adhoc_payments_fv += fv
+                        adhoc_payments_total += amount
+            except:
+                pass
         
         total_investment_value = emi_adjustment_fv + periodic_payments_fv + adhoc_payments_fv
         total_prepayments = emi_adjustment_total + periodic_payments_total + adhoc_payments_total
