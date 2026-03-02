@@ -1,0 +1,324 @@
+from datetime import datetime, timedelta
+from typing import List, Dict, Optional
+from decimal import Decimal, ROUND_HALF_UP
+import math
+
+class LoanSimulator:
+    def __init__(self, loan_data: dict):
+        self.loan_amount = Decimal(str(loan_data['loan_amount']))
+        self.annual_rate = Decimal(str(loan_data['interest_rate']))
+        self.tenure_years = int(loan_data['tenure_years'])
+        self.loan_start_date = datetime.strptime(loan_data['loan_start_date'], '%Y-%m-%d')
+        self.loan_type = loan_data.get('loan_type', 'Home')
+        self.processing_fee = Decimal(str(loan_data.get('processing_fee', 0)))
+        
+        # EMI adjustment
+        self.adjusted_emi = Decimal(str(loan_data.get('adjusted_emi', 0))) if loan_data.get('adjusted_emi') else None
+        
+        # Periodic payments
+        self.periodic_payments = loan_data.get('periodic_payments', [])
+        
+        # Adhoc payments
+        self.adhoc_payments = loan_data.get('adhoc_payments', [])
+        
+        # Prepayment charges
+        self.prepayment_charge_percent = Decimal(str(loan_data.get('prepayment_charge_percent', 0)))
+        self.prepayment_fixed_fee = Decimal(str(loan_data.get('prepayment_fixed_fee', 0)))
+        self.prepayment_charge_years = int(loan_data.get('prepayment_charge_years', 0))
+        self.prepayment_inclusive = loan_data.get('prepayment_inclusive', True)
+        
+        # Bank preference
+        self.bank_preference = loan_data.get('bank_preference', 'reduce_tenure')  # 'reduce_tenure' or 'reduce_emi'
+        
+        # Tax impact (optional)
+        self.tax_slab = Decimal(str(loan_data.get('tax_slab', 0)))
+        
+        # Investment return for comparison
+        self.investment_return = Decimal(str(loan_data.get('investment_return', 0)))
+        
+        self.monthly_rate = self.annual_rate / Decimal('1200')  # Convert to monthly decimal
+        self.total_months = self.tenure_years * 12
+        
+    def calculate_emi(self, principal: Decimal, rate: Decimal, months: int) -> Decimal:
+        """Calculate EMI using standard formula"""
+        if rate == 0:
+            return principal / Decimal(str(months))
+        
+        r = rate / Decimal('100')
+        emi = principal * r * ((1 + r) ** months) / (((1 + r) ** months) - 1)
+        return emi.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    
+    def calculate_standard_emi(self) -> Decimal:
+        """Calculate standard EMI without adjustments"""
+        return self.calculate_emi(self.loan_amount, self.monthly_rate, self.total_months)
+    
+    def get_prepayment_charge(self, amount: Decimal, month: int) -> Decimal:
+        """Calculate prepayment charge"""
+        years_elapsed = month / 12
+        
+        if self.prepayment_charge_years > 0 and years_elapsed > self.prepayment_charge_years:
+            return Decimal('0')
+        
+        percent_charge = amount * self.prepayment_charge_percent / Decimal('100')
+        total_charge = percent_charge + self.prepayment_fixed_fee
+        
+        return total_charge.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    
+    def get_periodic_payment(self, month: int) -> Decimal:
+        """Get periodic payment for a given month"""
+        total = Decimal('0')
+        
+        for payment in self.periodic_payments:
+            amount = Decimal(str(payment['amount']))
+            frequency = payment['frequency']  # 'monthly', 'quarterly', 'half_yearly', 'yearly'
+            start_period = int(payment['start_period'])
+            occurrences = int(payment['occurrences'])
+            
+            if month < start_period:
+                continue
+            
+            months_from_start = month - start_period
+            
+            frequency_map = {
+                'monthly': 1,
+                'quarterly': 3,
+                'half_yearly': 6,
+                'yearly': 12
+            }
+            
+            interval = frequency_map.get(frequency, 1)
+            
+            if months_from_start % interval == 0:
+                occurrence_number = months_from_start // interval
+                if occurrence_number < occurrences:
+                    total += amount
+        
+        return total
+    
+    def get_adhoc_payment(self, current_date: datetime) -> Decimal:
+        """Get adhoc payment for a given date"""
+        total = Decimal('0')
+        
+        for payment in self.adhoc_payments:
+            payment_date = datetime.strptime(payment['date'], '%Y-%m-%d')
+            if payment_date.year == current_date.year and payment_date.month == current_date.month:
+                amount = Decimal(str(payment['amount']))
+                total += amount
+        
+        return total
+    
+    def simulate(self) -> Dict:
+        """Run the loan simulation"""
+        standard_emi = self.calculate_standard_emi()
+        
+        # Validate adjusted EMI
+        if self.adjusted_emi and self.adjusted_emi < standard_emi:
+            raise ValueError(f"Adjusted EMI ({self.adjusted_emi}) must be >= standard EMI ({standard_emi})")
+        
+        working_emi = self.adjusted_emi if self.adjusted_emi else standard_emi
+        
+        # Simulate original loan (no prepayments)
+        original_schedule = self._simulate_original()
+        
+        # Simulate optimized loan (with prepayments)
+        optimized_schedule = self._simulate_optimized(working_emi)
+        
+        # Calculate investment comparison
+        investment_analysis = self._calculate_investment_comparison(optimized_schedule)
+        
+        return {
+            'standard_emi': float(standard_emi),
+            'original': original_schedule['summary'],
+            'optimized': optimized_schedule['summary'],
+            'original_schedule': original_schedule['schedule'],
+            'optimized_schedule': optimized_schedule['schedule'],
+            'investment_analysis': investment_analysis,
+            'savings': {
+                'interest_saved': float(original_schedule['summary']['total_interest'] - optimized_schedule['summary']['total_interest']),
+                'years_saved': round((original_schedule['summary']['actual_tenure'] - optimized_schedule['summary']['actual_tenure']) / 12, 2),
+                'months_saved': original_schedule['summary']['actual_tenure'] - optimized_schedule['summary']['actual_tenure']
+            }
+        }
+    
+    def _simulate_original(self) -> Dict:
+        """Simulate original loan without any prepayments or adjustments"""
+        schedule = []
+        outstanding = self.loan_amount
+        emi = self.calculate_standard_emi()
+        total_interest = Decimal('0')
+        current_date = self.loan_start_date
+        month = 0
+        
+        while outstanding > Decimal('0.01') and month < self.total_months * 2:  # Safety limit
+            month += 1
+            
+            interest = (outstanding * self.monthly_rate).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            principal = emi - interest
+            
+            if principal > outstanding:
+                principal = outstanding
+                emi = principal + interest
+            
+            outstanding -= principal
+            if outstanding < Decimal('0'):
+                outstanding = Decimal('0')
+            
+            total_interest += interest
+            
+            schedule.append({
+                'month': month,
+                'date': current_date.strftime('%Y-%m-%d'),
+                'opening_balance': float(outstanding + principal),
+                'emi': float(emi),
+                'principal': float(principal),
+                'interest': float(interest),
+                'closing_balance': float(outstanding)
+            })
+            
+            current_date += timedelta(days=30)
+        
+        return {
+            'summary': {
+                'emi': float(emi),
+                'actual_tenure': month,
+                'total_interest': float(total_interest),
+                'total_repayment': float(self.loan_amount + total_interest),
+                'prepayment_charges': 0
+            },
+            'schedule': schedule
+        }
+    
+    def _simulate_optimized(self, working_emi: Decimal) -> Dict:
+        """Simulate optimized loan with prepayments and adjustments"""
+        schedule = []
+        outstanding = self.loan_amount
+        total_interest = Decimal('0')
+        total_prepayment_charges = Decimal('0')
+        total_principal_paid = Decimal('0')
+        total_extra_principal = Decimal('0')
+        current_date = self.loan_start_date
+        month = 0
+        current_emi = working_emi
+        
+        while outstanding > Decimal('0.01') and month < self.total_months * 2:  # Safety limit
+            month += 1
+            
+            # Calculate interest for this month
+            interest = (outstanding * self.monthly_rate).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            
+            # Base principal from EMI
+            emi_principal = current_emi - interest
+            
+            if emi_principal > outstanding:
+                emi_principal = outstanding
+                current_emi = emi_principal + interest
+            
+            # Get additional payments
+            periodic_payment = self.get_periodic_payment(month)
+            adhoc_payment = self.get_adhoc_payment(current_date)
+            
+            total_prepayment = periodic_payment + adhoc_payment
+            prepayment_charge = Decimal('0')
+            net_prepayment = total_prepayment
+            
+            if total_prepayment > Decimal('0'):
+                if self.prepayment_inclusive:
+                    # Payment includes charges
+                    prepayment_charge = self.get_prepayment_charge(total_prepayment, month)
+                    net_prepayment = total_prepayment - prepayment_charge
+                else:
+                    # Payment is pure principal, charge is separate
+                    net_prepayment = total_prepayment
+                    prepayment_charge = self.get_prepayment_charge(total_prepayment, month)
+            
+            total_prepayment_charges += prepayment_charge
+            total_extra_principal += net_prepayment
+            
+            # Total principal reduction
+            total_principal = emi_principal + net_prepayment
+            
+            if total_principal > outstanding:
+                total_principal = outstanding
+            
+            outstanding -= total_principal
+            if outstanding < Decimal('0'):
+                outstanding = Decimal('0')
+            
+            total_interest += interest
+            total_principal_paid += total_principal
+            
+            schedule.append({
+                'month': month,
+                'date': current_date.strftime('%Y-%m-%d'),
+                'opening_balance': float(outstanding + total_principal),
+                'emi': float(current_emi),
+                'interest': float(interest),
+                'emi_principal': float(emi_principal),
+                'extra_principal': float(net_prepayment),
+                'prepayment_charge': float(prepayment_charge),
+                'total_principal': float(total_principal),
+                'closing_balance': float(outstanding)
+            })
+            
+            # Recalculate EMI if bank preference is to reduce EMI and there was prepayment
+            if self.bank_preference == 'reduce_emi' and net_prepayment > Decimal('0') and outstanding > Decimal('0'):
+                remaining_months = self.total_months - month
+                if remaining_months > 0:
+                    new_emi = self.calculate_emi(outstanding, self.monthly_rate, remaining_months)
+                    if self.adjusted_emi:
+                        # Keep adjusted EMI as minimum
+                        current_emi = max(new_emi, self.adjusted_emi)
+                    else:
+                        current_emi = new_emi
+            
+            current_date += timedelta(days=30)
+        
+        return {
+            'summary': {
+                'emi': float(working_emi),
+                'actual_tenure': month,
+                'total_interest': float(total_interest),
+                'total_repayment': float(self.loan_amount + total_interest + total_prepayment_charges),
+                'prepayment_charges': float(total_prepayment_charges),
+                'total_extra_principal': float(total_extra_principal)
+            },
+            'schedule': schedule
+        }
+    
+    def _calculate_investment_comparison(self, optimized_schedule: Dict) -> Dict:
+        """Calculate prepay vs invest comparison"""
+        if self.investment_return == 0:
+            return {
+                'enabled': False
+            }
+        
+        schedule = optimized_schedule['schedule']
+        monthly_return = self.investment_return / Decimal('1200')
+        
+        total_investment_value = Decimal('0')
+        
+        for entry in schedule:
+            extra_principal = Decimal(str(entry['extra_principal']))
+            if extra_principal > Decimal('0'):
+                # Calculate remaining months from this point
+                remaining_months = len(schedule) - entry['month']
+                
+                # Future value of this investment
+                if monthly_return > 0:
+                    fv = extra_principal * ((1 + monthly_return) ** remaining_months)
+                else:
+                    fv = extra_principal
+                
+                total_investment_value += fv
+        
+        interest_saved = Decimal(str(optimized_schedule['summary']['total_interest']))
+        
+        return {
+            'enabled': True,
+            'total_prepayments': float(Decimal(str(optimized_schedule['summary']['total_extra_principal']))),
+            'investment_return_rate': float(self.investment_return),
+            'investment_future_value': float(total_investment_value),
+            'interest_saved_by_prepaying': float(interest_saved),
+            'difference': float(total_investment_value - interest_saved),
+            'recommendation': 'Invest' if total_investment_value > interest_saved else 'Prepay'
+        }
