@@ -69,6 +69,68 @@ async def get_status_checks():
     
     return status_checks
 
+# Loan simulation models
+class LoanSimulationRequest(BaseModel):
+    loan_amount: float
+    interest_rate: float
+    tenure_years: int
+    loan_start_date: str
+    loan_type: str = "Home"
+    processing_fee: float = 0
+    adjusted_emi: Optional[float] = None
+    periodic_payments: List[Dict[str, Any]] = []
+    adhoc_payments: List[Dict[str, Any]] = []
+    prepayment_charge_percent: float = 0
+    prepayment_fixed_fee: float = 0
+    prepayment_charge_years: int = 0
+    prepayment_inclusive: bool = True
+    bank_preference: str = "reduce_tenure"
+    tax_slab: float = 0
+    investment_return: float = 0
+
+@api_router.post("/simulate")
+async def simulate_loan(request: LoanSimulationRequest):
+    try:
+        simulator = LoanSimulator(request.model_dump())
+        result = simulator.simulate()
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Simulation error: {str(e)}")
+
+@api_router.post("/export/excel")
+async def export_excel(request: LoanSimulationRequest):
+    try:
+        simulator = LoanSimulator(request.model_dump())
+        result = simulator.simulate()
+        
+        excel_file = ExportService.generate_excel(result, request.model_dump())
+        
+        return StreamingResponse(
+            excel_file,
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": "attachment; filename=loan_amortization.xlsx"}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Export error: {str(e)}")
+
+@api_router.post("/export/pdf")
+async def export_pdf(request: LoanSimulationRequest):
+    try:
+        simulator = LoanSimulator(request.model_dump())
+        result = simulator.simulate()
+        
+        pdf_file = ExportService.generate_pdf(result, request.model_dump())
+        
+        return StreamingResponse(
+            pdf_file,
+            media_type="application/pdf",
+            headers={"Content-Disposition": "attachment; filename=loan_summary.pdf"}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Export error: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
