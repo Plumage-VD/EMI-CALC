@@ -1,0 +1,202 @@
+{
+  "design_identity": {
+    "name": "Organic Wealth & Strategic Clarity",
+    "description": "A fusion of Swiss Design precision (for data) and Organic warmth (for human connection). It avoids the sterile 'Blue Bank' aesthetic by using deep forest greens, bone whites, and terracotta accents.",
+    "core_values": [
+      "Trust through Clarity",
+      "Growth through Strategy",
+      "Calm in Complexity"
+    ],
+    "mood": "Professional, grounded, yet optimistic. Like a high-end architectural firm managing your finances.",
+    "theme_strategy": "Light Mode default (Trust/Paper feel). Dark Mode available (Premium/Night Owl).",
+    "forbidden_elements": [
+      "Standard SaaS Blue (#3B82F6)",
+      "Generic 'Inter' headings",
+      "Centered layouts without purpose",
+      "Pure Black (#000000) backgrounds"
+    ]
+  },
+  "typography": {
+    "font_strategy": "The 'Old Money Tech' Pairing",
+    "headings": {
+      "family": "Space Grotesk",
+      "weights": ["Medium (500)", "Bold (700)"],
+      "usage": "Use for all H1-H4. It has a slight 'technical' quirk that fits the simulator engine.",
+      "letter_spacing": "tracking-tight"
+    },
+    "body": {
+      "family": "Inter",
+      "weights": ["Regular (400)", "Medium (500)"],
+      "usage": "UI elements, long text, data tables.",
+      "letter_spacing": "tracking-normal"
+    },
+    "data_display": {
+      "family": "JetBrains Mono",
+      "usage": "For financial figures in the simulator to ensure alignment.",
+      "size": "text-sm or text-xs"
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "name": "Deep Forest",
+        "hex": "#064E3B",
+        "tailwind": "bg-emerald-900",
+        "text_contrast": "#FFFFFF"
+      },
+      "secondary": {
+        "name": "Earthy Gold",
+        "hex": "#D97706",
+        "tailwind": "bg-amber-600",
+        "text_contrast": "#FFFFFF"
+      },
+      "background": {
+        "light": "#F5F5F4",
+        "dark": "#0C0A09",
+        "tailwind_light": "bg-stone-100",
+        "tailwind_dark": "bg-stone-950"
+      },
+      "surface": {
+        "light": "#FFFFFF",
+        "dark": "#1C1917",
+        "tailwind_light": "bg-white",
+        "tailwind_dark": "bg-stone-900"
+      },
+      "text": {
+        "primary": "#1C1917",
+        "secondary": "#57534E",
+        "tailwind_primary": "text-stone-900",
+        "tailwind_secondary": "text-stone-600"
+      },
+      "accents": {
+        "success": "#10B981",
+        "warning": "#F59E0B",
+        "error": "#EF4444"
+      }
+    },
+    "gradients": {
+      "hero_overlay": "linear-gradient(180deg, rgba(6, 78, 59, 0.05) 0%, rgba(245, 245, 244, 0) 100%)",
+      "card_hover": "linear-gradient(45deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%)"
+    }
+  },
+  "layout": {
+    "spacing_scale": {
+      "base": "4px",
+      "container_padding": "p-6 md:p-12 lg:p-16",
+      "section_gap": "gap-12 md:gap-24",
+      "component_gap": "gap-4 md:gap-8"
+    },
+    "grid_systems": {
+      "marketing": {
+        "name": "The Bento/Tetris Grid",
+        "rules": [
+          "Use grid-cols-12",
+          "Mix col-span-4 (square), col-span-8 (wide), col-span-6 (balanced)",
+          "Never fill 100% perfectly; leave negative space"
+        ]
+      },
+      "dashboard": {
+        "name": "High Density Data Grid",
+        "rules": [
+          "Use grid-cols-4",
+          "Gap-4",
+          "Every pixel utilized",
+          "Stretch height (h-full) for all cards in a row"
+        ]
+      }
+    },
+    "containers": {
+      "max_width": "max-w-7xl",
+      "alignment": "mx-auto"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "rounded-full px-8 py-3 bg-emerald-900 text-white hover:bg-emerald-800 transition-transform active:scale-95 shadow-lg",
+      "secondary": "rounded-full px-8 py-3 border border-stone-300 text-stone-700 hover:bg-stone-100 transition-colors"
+    },
+    "cards": {
+      "style": "bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300",
+      "padding": "p-6"
+    },
+    "inputs": {
+      "style": "h-12 rounded-lg border-stone-300 focus:ring-2 focus:ring-emerald-900/20 focus:border-emerald-900 bg-white dark:bg-stone-900"
+    },
+    "visual_enhancers": {
+      "glass": "backdrop-blur-xl bg-white/70 border-white/20 shadow-sm",
+      "noise": "opacity-5 mix-blend-overlay pointer-events-none absolute inset-0 bg-[url('/noise.png')]"
+    }
+  },
+  "motion": {
+    "principles": [
+      "Micro-interactions on every click",
+      "Staggered entrance for lists",
+      "Smooth layout transitions (LayoutGroup)"
+    ],
+    "libraries": [
+      "framer-motion",
+      "lenis (smooth scroll)"
+    ],
+    "presets": {
+      "fade_up": {
+        "initial": { "opacity": 0, "y": 20 },
+        "animate": { "opacity": 1, "y": 0 },
+        "transition": { "duration": 0.5 }
+      },
+      "hover_lift": {
+        "whileHover": { "y": -4 },
+        "transition": { "type": "spring", "stiffness": 300 }
+      }
+    }
+  },
+  "images": {
+    "hero_section": {
+      "url": "https://images.unsplash.com/photo-1767630415897-0ba72ec109c0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBtaW5pbWFsaXN0JTIwaG9tZSUyMGFyY2hpdGVjdHVyZXxlbnwwfHx8fDE3NzI0NTc4OTB8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Modern minimalist home representing the dream goal",
+      "usage": "Hero background or side visual"
+    },
+    "growth_feature": {
+      "url": "https://images.unsplash.com/photo-1552248524-10d9a7e4841c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwc21hbGwlMjBwbGFudCUyMGdyb3dpbmclMjBmcm9tJTIwc29pbHxlbnwwfHx8fDE3NzI0NTc4OTl8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Small plant growing, symbolizing savings and SIP",
+      "usage": "Feature card for 'Prepay vs Invest'"
+    },
+    "planning_feature": {
+      "url": "https://images.unsplash.com/photo-1718279602896-6df6c34f61e5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODl8MHwxfHNlYXJjaHwyfHxwZXJzb24lMjB3b3JraW5nJTIwbGFwdG9wJTIwY29mZmVlJTIwc2hvcCUyMHN1bmxpZ2h0fGVufDB8fHx8MTc3MjQ1NzkwMXww&ixlib=rb-4.1.0&q=85",
+      "alt": "Person working on laptop in a cafe",
+      "usage": "Feature card for 'EMI Simulator' - planning freedom"
+    },
+    "success_feature": {
+      "url": "https://images.unsplash.com/photo-1533696848654-6bdf438edea4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzV8MHwxfHNlYXJjaHwxfHxoYW5kJTIwaG9sZGluZyUyMGhvdXNlJTIwa2V5cyUyMGNsb3NlJTIwdXB8ZW58MHx8fHwxNzcyNDU3OTExfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Hand holding house key",
+      "usage": "Call to Action section or Success state"
+    }
+  },
+  "accessibility": {
+    "contrast_check": "Ensure text-stone-600 is legible on bg-stone-100",
+    "interactive_elements": "Min target size 44px",
+    "focus_states": "Visible ring-2 ring-emerald-500 ring-offset-2"
+  },
+  "universal_guidelines": {
+    "instructions": [
+      "You tend to converge toward generic, 'on distribution' outputs. In frontend design, this creates what users call the 'AI slop' aesthetic. Avoid this: make creative, distinctive frontends that surprise and delight.",
+      "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+      "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+      "Create depth through layered design elements with z-index hierarchy",
+      "Use glass-morphism effects with backdrop filters (12-24px blur)",
+      "You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+      "You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text",
+      "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+      "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯📚 for icons.",
+      "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+      "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+      "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+      "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN",
+      "Components MUST use named exports (export const ComponentName = ...)",
+      "Pages MUST use default exports (export default function PageName() {...})",
+      "Use sonner for toasts"
+    ],
+    "testing": {
+      "rule": "All interactive and key informational elements MUST include a data-testid attribute"
+    }
+  }
+}
