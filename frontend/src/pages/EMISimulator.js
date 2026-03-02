@@ -40,7 +40,6 @@ const EMISimulator = () => {
   // Prepayment charges
   const [prepaymentChargePercent, setPrepaymentChargePercent] = useState(2);
   const [prepaymentFixedFee, setPrepaymentFixedFee] = useState(0);
-  const [prepaymentChargeYears, setPrepaymentChargeYears] = useState(3);
   const [prepaymentInclusive, setPrepaymentInclusive] = useState(true);
   const [bankPreference, setBankPreference] = useState('reduce_tenure');
 
@@ -62,7 +61,6 @@ const EMISimulator = () => {
         adhoc_payments: adhocPayments,
         prepayment_charge_percent: prepaymentChargePercent,
         prepayment_fixed_fee: prepaymentFixedFee,
-        prepayment_charge_years: prepaymentChargeYears,
         prepayment_inclusive: prepaymentInclusive,
         bank_preference: bankPreference,
         investment_return: investmentReturn
@@ -110,7 +108,6 @@ const EMISimulator = () => {
     adhoc_payments: adhocPayments,
     prepayment_charge_percent: prepaymentChargePercent,
     prepayment_fixed_fee: prepaymentFixedFee,
-    prepayment_charge_years: prepaymentChargeYears,
     prepayment_inclusive: prepaymentInclusive,
     bank_preference: bankPreference,
     investment_return: investmentReturn
@@ -180,8 +177,6 @@ const EMISimulator = () => {
                 setPrepaymentChargePercent={setPrepaymentChargePercent}
                 prepaymentFixedFee={prepaymentFixedFee}
                 setPrepaymentFixedFee={setPrepaymentFixedFee}
-                prepaymentChargeYears={prepaymentChargeYears}
-                setPrepaymentChargeYears={setPrepaymentChargeYears}
                 prepaymentInclusive={prepaymentInclusive}
                 setPrepaymentInclusive={setPrepaymentInclusive}
                 bankPreference={bankPreference}

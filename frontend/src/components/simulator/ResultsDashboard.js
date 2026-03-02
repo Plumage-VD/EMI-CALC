@@ -304,43 +304,130 @@ export const ResultsDashboard = ({ results, loanData }) => {
 
       {/* Investment Analysis */}
       {investment_analysis.enabled && (
-        <Card className="p-6 border border-amber-200 rounded-xl bg-amber-50">
+        <Card className="p-6 glass-card border-2 border-primary/20">
           <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 rounded-lg bg-amber-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0">
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-amber-900 mb-4">Prepay vs Invest Analysis</h3>
+              <h3 className="text-2xl font-bold mb-2">Prepay vs Invest Analysis</h3>
+              <p className="text-sm text-muted-foreground mb-6">
+                Detailed breakdown of what your prepayments would earn if invested @ {investment_analysis.investment_return_rate}% p.a.
+              </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              {/* Breakdown by Source */}
+              {investment_analysis.breakdown && (
+                <div className="mb-6 space-y-3">
+                  <h4 className="font-semibold text-sm mb-3">Investment Returns Breakdown:</h4>
+                  
+                  {investment_analysis.breakdown.emi_adjustment.invested > 0 && (
+                    <div className="p-4 bg-muted/30 rounded-lg border border-border">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium">EMI Adjustment</span>
+                        <span className="text-xs text-muted-foreground">
+                          Extra EMI payments
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <p className="text-xs text-muted-foreground">Invested</p>
+                          <p className="font-mono font-semibold">₹{Math.round(investment_analysis.breakdown.emi_adjustment.invested).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Future Value</p>
+                          <p className="font-mono font-semibold text-primary">₹{Math.round(investment_analysis.breakdown.emi_adjustment.future_value).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Gain</p>
+                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">₹{Math.round(investment_analysis.breakdown.emi_adjustment.gain).toLocaleString('en-IN')}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {investment_analysis.breakdown.periodic_payments.invested > 0 && (
+                    <div className="p-4 bg-muted/30 rounded-lg border border-border">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium">Periodic Payments</span>
+                        <span className="text-xs text-muted-foreground">
+                          Recurring prepayments
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <p className="text-xs text-muted-foreground">Invested</p>
+                          <p className="font-mono font-semibold">₹{Math.round(investment_analysis.breakdown.periodic_payments.invested).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Future Value</p>
+                          <p className="font-mono font-semibold text-primary">₹{Math.round(investment_analysis.breakdown.periodic_payments.future_value).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Gain</p>
+                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">₹{Math.round(investment_analysis.breakdown.periodic_payments.gain).toLocaleString('en-IN')}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {investment_analysis.breakdown.adhoc_payments.invested > 0 && (
+                    <div className="p-4 bg-muted/30 rounded-lg border border-border">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium">Adhoc Lump Sum</span>
+                        <span className="text-xs text-muted-foreground">
+                          One-time payments
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <p className="text-xs text-muted-foreground">Invested</p>
+                          <p className="font-mono font-semibold">₹{Math.round(investment_analysis.breakdown.adhoc_payments.invested).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Future Value</p>
+                          <p className="font-mono font-semibold text-primary">₹{Math.round(investment_analysis.breakdown.adhoc_payments.future_value).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Gain</p>
+                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">₹{Math.round(investment_analysis.breakdown.adhoc_payments.gain).toLocaleString('en-IN')}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              {/* Summary */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 bg-primary/5 rounded-lg border-2 border-primary/20">
                 <div>
-                  <p className="text-sm text-amber-800 mb-2">If you had invested prepayments @ {investment_analysis.investment_return_rate}% p.a.</p>
-                  <p className="text-2xl font-mono font-bold text-amber-900">
+                  <p className="text-sm mb-2">Total Investment Future Value</p>
+                  <p className="text-3xl font-mono font-black bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
                     ₹{Math.round(investment_analysis.investment_future_value).toLocaleString('en-IN')}
                   </p>
-                  <p className="text-xs text-amber-700 mt-1">Future value of investments</p>
+                  <p className="text-xs text-muted-foreground mt-1">If invested @ {investment_analysis.investment_return_rate}%</p>
                 </div>
                 
                 <div>
-                  <p className="text-sm text-amber-800 mb-2">Interest saved by prepaying</p>
-                  <p className="text-2xl font-mono font-bold text-amber-900">
+                  <p className="text-sm mb-2">Interest Saved by Prepaying</p>
+                  <p className="text-3xl font-mono font-black bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
                     ₹{Math.round(savings.interest_saved).toLocaleString('en-IN')}
                   </p>
-                  <p className="text-xs text-amber-700 mt-1">Total interest saved</p>
+                  <p className="text-xs text-muted-foreground mt-1">Guaranteed savings</p>
                 </div>
               </div>
 
-              <div className={`p-4 rounded-lg border-2 ${investment_analysis.recommendation === 'Invest' ? 'bg-green-50 border-green-300' : 'bg-blue-50 border-blue-300'}`}>
-                <div className="flex items-center space-x-2">
-                  <AlertCircle className={`w-5 h-5 ${investment_analysis.recommendation === 'Invest' ? 'text-green-700' : 'text-blue-700'}`} />
-                  <p className={`font-semibold ${investment_analysis.recommendation === 'Invest' ? 'text-green-900' : 'text-blue-900'}`}>
+              {/* Recommendation */}
+              <div className={`p-4 rounded-xl border-2 ${investment_analysis.recommendation === 'Invest' ? 'bg-green-50 dark:bg-green-950/30 border-green-300 dark:border-green-800' : 'bg-blue-50 dark:bg-blue-950/30 border-blue-300 dark:border-blue-800'}`}>
+                <div className="flex items-center space-x-2 mb-2">
+                  <AlertCircle className={`w-5 h-5 ${investment_analysis.recommendation === 'Invest' ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400'}`} />
+                  <p className={`font-bold text-lg ${investment_analysis.recommendation === 'Invest' ? 'text-green-900 dark:text-green-300' : 'text-blue-900 dark:text-blue-300'}`}>
                     Recommendation: {investment_analysis.recommendation}
                   </p>
                 </div>
-                <p className={`text-sm mt-2 ${investment_analysis.recommendation === 'Invest' ? 'text-green-800' : 'text-blue-800'}`}>
+                <p className={`text-sm ${investment_analysis.recommendation === 'Invest' ? 'text-green-800 dark:text-green-400' : 'text-blue-800 dark:text-blue-400'}`}>
                   {investment_analysis.recommendation === 'Invest' 
-                    ? `Investing your prepayments could yield ₹${Math.round(Math.abs(investment_analysis.difference)).toLocaleString('en-IN')} more than prepaying the loan.`
-                    : `Prepaying your loan saves you ₹${Math.round(Math.abs(investment_analysis.difference)).toLocaleString('en-IN')} more than investing at ${investment_analysis.investment_return_rate}% returns.`
+                    ? `Investing your prepayments could yield ₹${Math.round(Math.abs(investment_analysis.difference)).toLocaleString('en-IN')} MORE than prepaying the loan.`
+                    : `Prepaying your loan saves you ₹${Math.round(Math.abs(investment_analysis.difference)).toLocaleString('en-IN')} MORE than investing at ${investment_analysis.investment_return_rate}% returns.`
                   }
                 </p>
               </div>
