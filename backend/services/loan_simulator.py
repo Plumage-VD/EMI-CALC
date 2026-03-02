@@ -48,12 +48,14 @@ class LoanSimulator:
         self.total_months = self.tenure_years * 12
         
     def calculate_emi(self, principal: Decimal, rate: Decimal, months: int) -> Decimal:
-        """Calculate EMI using standard formula"""
+        """Calculate EMI using standard formula
+        Note: rate should be monthly rate as decimal (e.g., 0.00708 for 8.5% annual)
+        """
         if rate == 0:
             return principal / Decimal(str(months))
         
-        r = rate / Decimal('100')
-        emi = principal * r * ((1 + r) ** months) / (((1 + r) ** months) - 1)
+        # rate is already in decimal form (monthly_rate), no need to divide by 100 again
+        emi = principal * rate * ((1 + rate) ** months) / (((1 + rate) ** months) - 1)
         return emi.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
     
     def calculate_standard_emi(self) -> Decimal:
