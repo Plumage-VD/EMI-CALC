@@ -179,75 +179,75 @@ export const ResultsDashboard = ({ results, loanData }) => {
       </div>
 
       {/* Comparison Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-6 border border-stone-200 rounded-xl bg-white">
-          <div className="flex items-start justify-between mb-3">
-            <div className="w-10 h-10 rounded-lg bg-emerald-900/10 flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-emerald-900" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="stat-card glass-card">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
+              <DollarSign className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full" data-testid="emi-badge">
-              EMI
+            <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full" data-testid="emi-badge">
+              Monthly
             </span>
           </div>
-          <p className="text-xs text-stone-600 mb-1">Monthly EMI</p>
-          <p className="text-2xl font-mono font-bold text-stone-900" data-testid="optimized-emi">
+          <p className="text-sm text-muted-foreground mb-2">EMI Amount</p>
+          <p className="text-3xl font-black bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent" data-testid="optimized-emi">
             ₹{Math.round(optimized.emi).toLocaleString('en-IN')}
           </p>
-          <p className="text-xs text-stone-500 mt-1">
-            Original: ₹{Math.round(original.emi).toLocaleString('en-IN')}
+          <p className="text-xs text-muted-foreground mt-2">
+            vs ₹{Math.round(original.emi).toLocaleString('en-IN')} original
           </p>
         </Card>
 
-        <Card className="p-6 border border-stone-200 rounded-xl bg-white">
-          <div className="flex items-start justify-between mb-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-600/10 flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-blue-600" />
+        <Card className="stat-card glass-card">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xs font-medium text-blue-700 bg-blue-50 px-2 py-1 rounded-full" data-testid="tenure-badge">
+            <span className="text-xs font-bold text-blue-600 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 px-3 py-1 rounded-full" data-testid="tenure-badge">
               Saved
             </span>
           </div>
-          <p className="text-xs text-stone-600 mb-1">Tenure Saved</p>
-          <p className="text-2xl font-mono font-bold text-blue-900" data-testid="years-saved">
+          <p className="text-sm text-muted-foreground mb-2">Time Saved</p>
+          <p className="text-3xl font-black text-blue-600 dark:text-blue-400" data-testid="years-saved">
             {savings.years_saved} years
           </p>
-          <p className="text-xs text-stone-500 mt-1">
-            {savings.months_saved} months saved
+          <p className="text-xs text-muted-foreground mt-2">
+            {savings.months_saved} months earlier
           </p>
         </Card>
 
-        <Card className="p-6 border border-stone-200 rounded-xl bg-white">
-          <div className="flex items-start justify-between mb-3">
-            <div className="w-10 h-10 rounded-lg bg-green-600/10 flex items-center justify-center">
-              <TrendingDown className="w-5 h-5 text-green-600" />
+        <Card className="stat-card glass-card">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
+              <TrendingDown className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xs font-medium text-green-700 bg-green-50 px-2 py-1 rounded-full" data-testid="interest-badge">
+            <span className="text-xs font-bold text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400 px-3 py-1 rounded-full" data-testid="interest-badge">
               Saved
             </span>
           </div>
-          <p className="text-xs text-stone-600 mb-1">Interest Saved</p>
-          <p className="text-2xl font-mono font-bold text-green-900" data-testid="interest-saved">
+          <p className="text-sm text-muted-foreground mb-2">Interest Saved</p>
+          <p className="text-3xl font-black text-green-600 dark:text-green-400" data-testid="interest-saved">
             ₹{Math.round(savings.interest_saved).toLocaleString('en-IN')}
           </p>
-          <p className="text-xs text-stone-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-2">
             vs ₹{Math.round(original.total_interest).toLocaleString('en-IN')} original
           </p>
         </Card>
 
-        <Card className="p-6 border border-stone-200 rounded-xl bg-white">
-          <div className="flex items-start justify-between mb-3">
-            <div className="w-10 h-10 rounded-lg bg-amber-600/10 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-amber-600" />
+        <Card className="stat-card glass-card">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+              <BarChart3 className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded-full" data-testid="charges-badge">
-              Charges
+            <span className="text-xs font-bold text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-3 py-1 rounded-full" data-testid="charges-badge">
+              Fees
             </span>
           </div>
-          <p className="text-xs text-stone-600 mb-1">Prepayment Charges</p>
-          <p className="text-2xl font-mono font-bold text-amber-900" data-testid="prepayment-charges">
+          <p className="text-sm text-muted-foreground mb-2">Prepayment Charges</p>
+          <p className="text-3xl font-black text-purple-600 dark:text-purple-400" data-testid="prepayment-charges">
             ₹{Math.round(optimized.prepayment_charges).toLocaleString('en-IN')}
           </p>
-          <p className="text-xs text-stone-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-2">
             Total fees paid
           </p>
         </Card>
@@ -350,64 +350,181 @@ export const ResultsDashboard = ({ results, loanData }) => {
       )}
 
       {/* Charts */}
-      <Card className="p-6 border border-stone-200 rounded-xl bg-white">
+      <Card className="p-6 glass-card">
         <Tabs defaultValue="outstanding" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="outstanding" data-testid="outstanding-chart-tab">Outstanding Balance</TabsTrigger>
-            <TabsTrigger value="yearly" data-testid="yearly-chart-tab">Yearly Breakdown</TabsTrigger>
-            <TabsTrigger value="cumulative" data-testid="cumulative-chart-tab">Cumulative Interest</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 h-14 bg-muted/50">
+            <TabsTrigger value="outstanding" className="text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground" data-testid="outstanding-chart-tab">
+              Outstanding Balance
+            </TabsTrigger>
+            <TabsTrigger value="yearly" className="text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground" data-testid="yearly-chart-tab">
+              Yearly Breakdown
+            </TabsTrigger>
+            <TabsTrigger value="cumulative" className="text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground" data-testid="cumulative-chart-tab">
+              Cumulative Interest
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="outstanding" className="mt-6">
-            <h3 className="text-lg font-semibold text-stone-900 mb-4">Outstanding Principal Over Time</h3>
-            <ResponsiveContainer width="100%" height={400}>
+          <TabsContent value="outstanding" className="mt-8">
+            <h3 className="text-lg font-bold mb-6">Outstanding Principal Over Time</h3>
+            <ResponsiveContainer width="100%" height={450}>
               <AreaChart data={outstandingChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
-                <XAxis dataKey="month" stroke="#57534e" />
-                <YAxis stroke="#57534e" tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`} />
-                <Tooltip 
-                  formatter={(value) => `₹${Math.round(value).toLocaleString('en-IN')}`}
-                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #e7e5e4', borderRadius: '8px' }}
+                <defs>
+                  <linearGradient id="colorOriginal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorOptimized" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--brand-gold))" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="hsl(var(--brand-gold))" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                <XAxis 
+                  dataKey="month" 
+                  stroke="hsl(var(--muted-foreground))"
+                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
                 />
-                <Legend />
-                <Area type="monotone" dataKey="original" stroke="#78716c" fill="#d6d3d1" name="Original" />
-                <Area type="monotone" dataKey="optimized" stroke="#064e3b" fill="#10b981" name="Optimized" />
+                <YAxis 
+                  stroke="hsl(var(--muted-foreground))"
+                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
+                />
+                <Tooltip 
+                  formatter={(value) => [`₹${Math.round(value).toLocaleString('en-IN')}`, '']}
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))', 
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+                  }}
+                  labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600, marginBottom: '8px' }}
+                />
+                <Legend 
+                  wrapperStyle={{ paddingTop: '20px' }}
+                  iconType="circle"
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="original" 
+                  stroke="hsl(var(--muted-foreground))" 
+                  strokeWidth={2.5}
+                  fill="url(#colorOriginal)" 
+                  name="Original Loan"
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="optimized" 
+                  stroke="hsl(var(--brand-gold))" 
+                  strokeWidth={3}
+                  fill="url(#colorOptimized)" 
+                  name="Optimized Loan"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </TabsContent>
 
-          <TabsContent value="yearly" className="mt-6">
-            <h3 className="text-lg font-semibold text-stone-900 mb-4">Interest vs Principal Per Year</h3>
-            <ResponsiveContainer width="100%" height={400}>
+          <TabsContent value="yearly" className="mt-8">
+            <h3 className="text-lg font-bold mb-6">Interest vs Principal Per Year</h3>
+            <ResponsiveContainer width="100%" height={450}>
               <BarChart data={yearlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
-                <XAxis dataKey="year" stroke="#57534e" />
-                <YAxis stroke="#57534e" tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`} />
-                <Tooltip 
-                  formatter={(value) => `₹${Math.round(value).toLocaleString('en-IN')}`}
-                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #e7e5e4', borderRadius: '8px' }}
+                <defs>
+                  <linearGradient id="colorInterest" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.9}/>
+                    <stop offset="95%" stopColor="#dc2626" stopOpacity={0.8}/>
+                  </linearGradient>
+                  <linearGradient id="colorPrincipal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--brand-gold-light))" stopOpacity={0.9}/>
+                    <stop offset="95%" stopColor="hsl(var(--brand-gold))" stopOpacity={0.8}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                <XAxis 
+                  dataKey="year" 
+                  stroke="hsl(var(--muted-foreground))"
+                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  label={{ value: 'Year', position: 'insideBottom', offset: -5, fill: 'hsl(var(--muted-foreground))' }}
                 />
-                <Legend />
-                <Bar dataKey="interest" fill="#ef4444" name="Interest" />
-                <Bar dataKey="principal" fill="#064e3b" name="Principal" />
+                <YAxis 
+                  stroke="hsl(var(--muted-foreground))"
+                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
+                />
+                <Tooltip 
+                  formatter={(value) => [`₹${Math.round(value).toLocaleString('en-IN')}`, '']}
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))', 
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+                  }}
+                  labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600, marginBottom: '8px' }}
+                />
+                <Legend 
+                  wrapperStyle={{ paddingTop: '20px' }}
+                  iconType="circle"
+                />
+                <Bar dataKey="interest" fill="url(#colorInterest)" name="Interest Paid" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="principal" fill="url(#colorPrincipal)" name="Principal Paid" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </TabsContent>
 
-          <TabsContent value="cumulative" className="mt-6">
-            <h3 className="text-lg font-semibold text-stone-900 mb-4">Cumulative Interest Comparison</h3>
-            <ResponsiveContainer width="100%" height={400}>
+          <TabsContent value="cumulative" className="mt-8">
+            <h3 className="text-lg font-bold mb-6">Cumulative Interest Comparison</h3>
+            <ResponsiveContainer width="100%" height={450}>
               <LineChart data={cumulativeInterestData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
-                <XAxis dataKey="month" stroke="#57534e" />
-                <YAxis stroke="#57534e" tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`} />
-                <Tooltip 
-                  formatter={(value) => `₹${Math.round(value).toLocaleString('en-IN')}`}
-                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #e7e5e4', borderRadius: '8px' }}
+                <defs>
+                  <linearGradient id="lineOriginal" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="hsl(var(--muted-foreground))" />
+                    <stop offset="100%" stopColor="hsl(var(--muted-foreground))" opacity={0.6} />
+                  </linearGradient>
+                  <linearGradient id="lineOptimized" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="hsl(var(--brand-gold))" />
+                    <stop offset="100%" stopColor="hsl(var(--brand-gold-light))" />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                <XAxis 
+                  dataKey="month" 
+                  stroke="hsl(var(--muted-foreground))"
+                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  label={{ value: 'Month', position: 'insideBottom', offset: -5, fill: 'hsl(var(--muted-foreground))' }}
                 />
-                <Legend />
-                <Line type="monotone" dataKey="original" stroke="#78716c" strokeWidth={2} name="Original" />
-                <Line type="monotone" dataKey="optimized" stroke="#064e3b" strokeWidth={2} name="Optimized" />
+                <YAxis 
+                  stroke="hsl(var(--muted-foreground))"
+                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
+                />
+                <Tooltip 
+                  formatter={(value) => [`₹${Math.round(value).toLocaleString('en-IN')}`, '']}
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))', 
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+                  }}
+                  labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600, marginBottom: '8px' }}
+                />
+                <Legend 
+                  wrapperStyle={{ paddingTop: '20px' }}
+                  iconType="circle"
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="original" 
+                  stroke="url(#lineOriginal)" 
+                  strokeWidth={3}
+                  dot={false}
+                  name="Original Loan" 
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="optimized" 
+                  stroke="url(#lineOptimized)" 
+                  strokeWidth={4}
+                  dot={false}
+                  name="Optimized Loan" 
+                />
               </LineChart>
             </ResponsiveContainer>
           </TabsContent>

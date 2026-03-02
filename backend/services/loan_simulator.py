@@ -133,8 +133,17 @@ class LoanSimulator:
         # Simulate optimized loan (with prepayments)
         optimized_schedule = self._simulate_optimized(working_emi)
         
+        # Calculate interest saved
+        interest_saved = float(original_schedule['summary']['total_interest'] - optimized_schedule['summary']['total_interest'])
+        
         # Calculate investment comparison
         investment_analysis = self._calculate_investment_comparison(optimized_schedule)
+        
+        # Add interest saved and recommendation to investment analysis
+        if investment_analysis['enabled']:
+            investment_analysis['interest_saved_by_prepaying'] = interest_saved
+            investment_analysis['difference'] = investment_analysis['investment_future_value'] - interest_saved
+            investment_analysis['recommendation'] = 'Invest' if investment_analysis['investment_future_value'] > interest_saved else 'Prepay'
         
         return {
             'standard_emi': float(standard_emi),
@@ -144,7 +153,7 @@ class LoanSimulator:
             'optimized_schedule': optimized_schedule['schedule'],
             'investment_analysis': investment_analysis,
             'savings': {
-                'interest_saved': float(original_schedule['summary']['total_interest'] - optimized_schedule['summary']['total_interest']),
+                'interest_saved': interest_saved,
                 'years_saved': round((original_schedule['summary']['actual_tenure'] - optimized_schedule['summary']['actual_tenure']) / 12, 2),
                 'months_saved': original_schedule['summary']['actual_tenure'] - optimized_schedule['summary']['actual_tenure']
             }
@@ -296,7 +305,9 @@ class LoanSimulator:
         }
     
     def _calculate_investment_comparison(self, optimized_schedule: Dict) -> Dict:
-        """Calculate prepay vs invest comparison"""
+        """Calculate prepay vs invest comparison
+        Compares: Future value if money was invested vs Interest saved by prepaying
+        """
         if self.investment_return == 0:
             return {
                 'enabled': False
@@ -310,7 +321,7 @@ class LoanSimulator:
         for entry in schedule:
             extra_principal = Decimal(str(entry['extra_principal']))
             if extra_principal > Decimal('0'):
-                # Calculate remaining months from this point
+                # Calculate remaining months from this point to end of OPTIMIZED loan
                 remaining_months = len(schedule) - entry['month']
                 
                 # Future value of this investment
@@ -321,14 +332,11 @@ class LoanSimulator:
                 
                 total_investment_value += fv
         
-        interest_saved = Decimal(str(optimized_schedule['summary']['total_interest']))
-        
+        # This is the ACTUAL interest saved (original - optimized)
+        # Will be calculated in simulate() method
         return {
             'enabled': True,
             'total_prepayments': float(Decimal(str(optimized_schedule['summary']['total_extra_principal']))),
             'investment_return_rate': float(self.investment_return),
-            'investment_future_value': float(total_investment_value),
-            'interest_saved_by_prepaying': float(interest_saved),
-            'difference': float(total_investment_value - interest_saved),
-            'recommendation': 'Invest' if total_investment_value > interest_saved else 'Prepay'
+            'investment_future_value': float(total_investment_value)
         }
