@@ -19,15 +19,15 @@ export const Navigation = ({ showCTA = true }) => {
             <div className="relative">
               <img 
                 src="/logo.png" 
-                alt="Plumage Capital Strategy Lab" 
+                alt="Capital Strategy Lab" 
                 className="w-10 h-10 transition-transform group-hover:scale-110"
               />
             </div>
             <div>
               <span className="text-lg font-bold bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
-                Plumage Capital
+                Capital Strategy Lab
               </span>
-              <p className="text-xs text-muted-foreground">Strategy Lab</p>
+              <p className="text-[10px] text-muted-foreground">by Plumage Consultancy</p>
             </div>
           </div>
           

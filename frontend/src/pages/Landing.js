@@ -230,10 +230,10 @@ const Landing = () => {
               <img src="/logo.png" alt="Logo" className="w-8 h-8" />
               <div>
                 <span className="text-base font-bold bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent block">
-                  Plumage Capital Strategy Lab
+                  Capital Strategy Lab
                 </span>
-                <p className="text-xs text-muted-foreground">
-                  Empowering borrowers to achieve financial freedom
+                <p className="text-[10px] text-muted-foreground">
+                  by Plumage Consultancy
                 </p>
               </div>
             </div>
@@ -245,11 +245,11 @@ const Landing = () => {
                 rel="noopener noreferrer"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center space-x-1"
               >
-                <span>A Plumage Consultancy Initiative</span>
+                <span>Visit Plumage Consultancy</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
               <p className="text-xs text-muted-foreground">
-                © 2026 Plumage Capital. All rights reserved.
+                © 2026 Plumage Consultancy. All rights reserved.
               </p>
             </div>
           </div>
