@@ -129,6 +129,7 @@ class LoanSimulator:
         
         # Simulate original loan (no prepayments)
         original_schedule = self._simulate_original()
+        original_tenure = original_schedule['summary']['actual_tenure']
         
         # Simulate optimized loan (with prepayments)
         optimized_schedule = self._simulate_optimized(working_emi)
@@ -136,8 +137,8 @@ class LoanSimulator:
         # Calculate interest saved
         interest_saved = float(original_schedule['summary']['total_interest'] - optimized_schedule['summary']['total_interest'])
         
-        # Calculate investment comparison
-        investment_analysis = self._calculate_investment_comparison(optimized_schedule)
+        # Calculate investment comparison - PASS ORIGINAL TENURE
+        investment_analysis = self._calculate_investment_comparison(optimized_schedule, original_tenure)
         
         # Add interest saved and recommendation to investment analysis
         if investment_analysis['enabled']:
@@ -304,9 +305,12 @@ class LoanSimulator:
             'schedule': schedule
         }
     
-    def _calculate_investment_comparison(self, optimized_schedule: Dict) -> Dict:
+    def _calculate_investment_comparison(self, optimized_schedule: Dict, original_tenure: int) -> Dict:
         """Calculate prepay vs invest comparison
         Compares: Future value if money was invested vs Interest saved by prepaying
+        
+        Key: Each prepayment compounds until the ORIGINAL loan tenure ends,
+        not until the optimized loan ends. This gives a fair comparison.
         """
         if self.investment_return == 0:
             return {
@@ -321,11 +325,12 @@ class LoanSimulator:
         for entry in schedule:
             extra_principal = Decimal(str(entry['extra_principal']))
             if extra_principal > Decimal('0'):
-                # Calculate remaining months from this point to end of OPTIMIZED loan
-                remaining_months = len(schedule) - entry['month']
+                # FIXED: Compound until ORIGINAL loan tenure ends, not optimized
+                # This represents: "What if I didn't prepay and invested this money instead?"
+                remaining_months = original_tenure - entry['month']
                 
                 # Future value of this investment
-                if monthly_return > 0:
+                if monthly_return > 0 and remaining_months > 0:
                     fv = extra_principal * ((1 + monthly_return) ** remaining_months)
                 else:
                     fv = extra_principal
