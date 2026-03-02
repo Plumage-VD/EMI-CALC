@@ -114,26 +114,26 @@ const EMISimulator = () => {
   };
 
   return (
-    <div className=\"min-h-screen bg-stone-100\">
+    <div className="min-h-screen bg-stone-100">
       {/* Navigation */}
-      <nav className=\"sticky top-0 z-50 glass-effect border-b border-stone-200/50\">
-        <div className=\"max-w-7xl mx-auto px-6 md:px-12 py-4\">
-          <div className=\"flex justify-between items-center\">
-            <div className=\"flex items-center space-x-4\">
+      <nav className="sticky top-0 z-50 glass-effect border-b border-stone-200/50">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-4">
               <Button
-                variant=\"ghost\"
+                variant="ghost"
                 onClick={() => navigate('/')}
-                className=\"rounded-full\"
-                data-testid=\"back-to-home-btn\"
+                className="rounded-full"
+                data-testid="back-to-home-btn"
               >
-                <ArrowLeft className=\"w-5 h-5 mr-2\" />
+                <ArrowLeft className="w-5 h-5 mr-2" />
                 Back
               </Button>
-              <div className=\"flex items-center space-x-2\">
-                <div className=\"w-10 h-10 rounded-full bg-emerald-900 flex items-center justify-center\">
-                  <DollarSign className=\"w-6 h-6 text-white\" />
+              <div className="flex items-center space-x-2">
+                <div className="w-10 h-10 rounded-full bg-emerald-900 flex items-center justify-center">
+                  <DollarSign className="w-6 h-6 text-white" />
                 </div>
-                <span className=\"text-xl font-bold text-emerald-900\">EMI Simulator</span>
+                <span className="text-xl font-bold text-emerald-900">EMI Simulator</span>
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@ const EMISimulator = () => {
       </nav>
 
       {/* Main Content */}
-      <div className=\"max-w-7xl mx-auto px-6 md:px-12 py-12\">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
