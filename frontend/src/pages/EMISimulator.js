@@ -147,16 +147,16 @@ const EMISimulator = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className=\"text-4xl sm:text-5xl font-bold text-stone-900 mb-4\">
+          <h1 className="text-4xl sm:text-5xl font-bold text-stone-900 mb-4">
             Optimize Your Loan Repayment
           </h1>
-          <p className=\"text-lg text-stone-600 mb-12 max-w-3xl\">
+          <p className="text-lg text-stone-600 mb-12 max-w-3xl">
             Configure your loan details and repayment strategy below. See real-time comparisons 
             between standard and optimized repayment scenarios.
           </p>
 
           {/* Input Sections */}
-          <div className=\"space-y-8\">
+          <div className="space-y-8">
             <BasicLoanDetails
               loanAmount={loanAmount}
               setLoanAmount={setLoanAmount}
@@ -209,12 +209,12 @@ const EMISimulator = () => {
             />
 
             {/* Simulate Button */}
-            <div className=\"flex justify-center pt-8\">
+            <div className="flex justify-center pt-8">
               <Button
                 onClick={handleSimulate}
                 disabled={loading}
-                className=\"rounded-full px-12 py-6 text-lg bg-emerald-900 hover:bg-emerald-800 transition-all active:scale-95 shadow-lg\"
-                data-testid=\"simulate-btn\"
+                className="rounded-full px-12 py-6 text-lg bg-emerald-900 hover:bg-emerald-800 transition-all active:scale-95 shadow-lg"
+                data-testid="simulate-btn"
               >
                 {loading ? 'Calculating...' : 'Run Simulation'}
               </Button>
@@ -223,7 +223,7 @@ const EMISimulator = () => {
 
           {/* Results Section */}
           {results && (
-            <div id=\"results\" className=\"mt-16\">
+            <div id="results" className="mt-16">
               <ResultsDashboard results={results} loanData={loanData} />
             </div>
           )}

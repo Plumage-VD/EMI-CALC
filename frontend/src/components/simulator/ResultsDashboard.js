@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, Download, TrendingDown, Calendar, DollarSign, FileText, AlertCircle, Lightbulb } from 'lucide-react';
+import { BarChart3, Download, TrendingDown, TrendingUp, Calendar, DollarSign, FileText, AlertCircle, Lightbulb } from 'lucide-react';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';

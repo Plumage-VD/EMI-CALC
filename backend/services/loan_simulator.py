@@ -5,6 +5,14 @@ import math
 
 class LoanSimulator:
     def __init__(self, loan_data: dict):
+        # Input validation
+        if loan_data['loan_amount'] <= 0:
+            raise ValueError("Loan amount must be positive")
+        if loan_data['interest_rate'] < 0:
+            raise ValueError("Interest rate cannot be negative")
+        if loan_data['tenure_years'] <= 0:
+            raise ValueError("Tenure must be positive")
+            
         self.loan_amount = Decimal(str(loan_data['loan_amount']))
         self.annual_rate = Decimal(str(loan_data['interest_rate']))
         self.tenure_years = int(loan_data['tenure_years'])

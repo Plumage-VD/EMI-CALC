@@ -108,11 +108,13 @@ class ExportService:
             ])
         
         # Adjust column widths
-        for col in ws_summary.columns:
-            ws_summary.column_dimensions[col[0].column_letter].width = 20
+        for i, col in enumerate(ws_summary.columns, 1):
+            col_letter = chr(64 + i)  # A, B, C, D...
+            ws_summary.column_dimensions[col_letter].width = 20
         
-        for col in ws_schedule.columns:
-            ws_schedule.column_dimensions[col[0].column_letter].width = 18
+        for i, col in enumerate(ws_schedule.columns, 1):
+            col_letter = chr(64 + i)  # A, B, C, D...
+            ws_schedule.column_dimensions[col_letter].width = 18
         
         # Save to BytesIO
         output = BytesIO()
