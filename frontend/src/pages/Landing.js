@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, TrendingDown, Calendar, DollarSign, Target, LineChart, FileText, Sparkles, ChevronRight } from 'lucide-react';
+import { ArrowRight, TrendingDown, Calendar, DollarSign, Target, LineChart, FileText, Sparkles, ChevronRight, ExternalLink } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import Navigation from '../components/Navigation';
@@ -224,16 +224,35 @@ const Landing = () => {
 
       {/* Footer */}
       <footer className="py-12 px-6 md:px-12 border-t border-border">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <img src="/logo.png" alt="Logo" className="w-8 h-8" />
-            <span className="text-lg font-bold bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
-              Loan Freedom Planner
-            </span>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex items-center space-x-3">
+              <img src="/logo.png" alt="Logo" className="w-8 h-8" />
+              <div>
+                <span className="text-base font-bold bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent block">
+                  Plumage Capital Strategy Lab
+                </span>
+                <p className="text-xs text-muted-foreground">
+                  Empowering borrowers to achieve financial freedom
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex flex-col items-center md:items-end space-y-2">
+              <a 
+                href="https://www.plumageconsultancy.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center space-x-1"
+              >
+                <span>A Plumage Consultancy Initiative</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+              <p className="text-xs text-muted-foreground">
+                © 2026 Plumage Capital. All rights reserved.
+              </p>
+            </div>
           </div>
-          <p className="text-muted-foreground">
-            © 2026 Loan Freedom Planner. Empowering borrowers to achieve financial freedom.
-          </p>
         </div>
       </footer>
     </div>

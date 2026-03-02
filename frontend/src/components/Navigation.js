@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, ExternalLink } from 'lucide-react';
 import { Button } from './ui/button';
 import { useTheme } from '../context/ThemeContext';
 
@@ -19,16 +19,29 @@ export const Navigation = ({ showCTA = true }) => {
             <div className="relative">
               <img 
                 src="/logo.png" 
-                alt="Loan Freedom Planner" 
+                alt="Plumage Capital Strategy Lab" 
                 className="w-10 h-10 transition-transform group-hover:scale-110"
               />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
-              Loan Freedom Planner
-            </span>
+            <div>
+              <span className="text-lg font-bold bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
+                Plumage Capital
+              </span>
+              <p className="text-xs text-muted-foreground">Strategy Lab</p>
+            </div>
           </div>
           
           <div className="flex items-center space-x-4">
+            <a 
+              href="https://www.plumageconsultancy.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hidden sm:flex items-center space-x-1 text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              <span>Visit Main Site</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+            
             <Button
               variant="ghost"
               size="icon"

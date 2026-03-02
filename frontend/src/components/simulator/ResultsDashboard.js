@@ -254,48 +254,48 @@ export const ResultsDashboard = ({ results, loanData }) => {
       </div>
 
       {/* Detailed Comparison Table */}
-      <Card className="p-6 border border-stone-200 rounded-xl bg-white">
-        <h3 className="text-xl font-bold text-stone-900 mb-4">Detailed Comparison</h3>
+      <Card className="p-6 glass-card">
+        <h3 className="text-xl font-bold mb-4">Detailed Comparison</h3>
         <div className="overflow-x-auto">
           <table className="w-full" data-testid="comparison-table">
             <thead>
-              <tr className="border-b border-stone-200">
-                <th className="text-left py-3 px-4 text-sm font-semibold text-stone-700">Metric</th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-stone-700">Original</th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-stone-700">Optimized</th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-stone-700">Difference</th>
+              <tr className="border-b border-border">
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Metric</th>
+                <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">Original</th>
+                <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">Optimized</th>
+                <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">Difference</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-stone-100">
-                <td className="py-3 px-4 text-sm text-stone-900">EMI</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">₹{Math.round(original.emi).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">₹{Math.round(optimized.emi).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">-</td>
+              <tr className="border-b border-border/50">
+                <td className="py-3 px-4 text-sm text-foreground">EMI</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(original.emi).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(optimized.emi).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-muted-foreground">-</td>
               </tr>
-              <tr className="border-b border-stone-100">
-                <td className="py-3 px-4 text-sm text-stone-900">Tenure (months)</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">{original.actual_tenure}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">{optimized.actual_tenure}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono text-green-700">{savings.months_saved}</td>
+              <tr className="border-b border-border/50">
+                <td className="py-3 px-4 text-sm text-foreground">Tenure (months)</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">{original.actual_tenure}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">{optimized.actual_tenure}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-green-600 dark:text-green-400">{savings.months_saved}</td>
               </tr>
-              <tr className="border-b border-stone-100">
-                <td className="py-3 px-4 text-sm text-stone-900">Total Interest</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">₹{Math.round(original.total_interest).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">₹{Math.round(optimized.total_interest).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono text-green-700">₹{Math.round(savings.interest_saved).toLocaleString('en-IN')}</td>
+              <tr className="border-b border-border/50">
+                <td className="py-3 px-4 text-sm text-foreground">Total Interest</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(original.total_interest).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(optimized.total_interest).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-green-600 dark:text-green-400">₹{Math.round(savings.interest_saved).toLocaleString('en-IN')}</td>
               </tr>
-              <tr className="border-b border-stone-100">
-                <td className="py-3 px-4 text-sm text-stone-900">Prepayment Charges</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">₹0</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">₹{Math.round(optimized.prepayment_charges).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono">-</td>
+              <tr className="border-b border-border/50">
+                <td className="py-3 px-4 text-sm text-foreground">Prepayment Charges</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹0</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(optimized.prepayment_charges).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-muted-foreground">-</td>
               </tr>
-              <tr className="bg-stone-50">
-                <td className="py-3 px-4 text-sm font-semibold text-stone-900">Total Repayment</td>
-                <td className="py-3 px-4 text-sm text-right font-mono font-semibold">₹{Math.round(original.total_repayment).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono font-semibold">₹{Math.round(optimized.total_repayment).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-green-700">₹{Math.round(original.total_repayment - optimized.total_repayment).toLocaleString('en-IN')}</td>
+              <tr className="bg-muted/30">
+                <td className="py-3 px-4 text-sm font-semibold text-foreground">Total Repayment</td>
+                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-foreground">₹{Math.round(original.total_repayment).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-foreground">₹{Math.round(optimized.total_repayment).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-green-600 dark:text-green-400">₹{Math.round(original.total_repayment - optimized.total_repayment).toLocaleString('en-IN')}</td>
               </tr>
             </tbody>
           </table>
@@ -424,17 +424,17 @@ export const ResultsDashboard = ({ results, loanData }) => {
           </TabsContent>
 
           <TabsContent value="yearly" className="mt-8">
-            <h3 className="text-lg font-bold mb-6">Interest vs Principal Per Year</h3>
+            <h3 className="text-lg font-bold mb-6">Interest vs Principal Composition Per Year</h3>
             <ResponsiveContainer width="100%" height={450}>
-              <BarChart data={yearlyData}>
+              <AreaChart data={yearlyData}>
                 <defs>
-                  <linearGradient id="colorInterest" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.9}/>
-                    <stop offset="95%" stopColor="#dc2626" stopOpacity={0.8}/>
+                  <linearGradient id="areaInterest" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#dc2626" stopOpacity={0.6}/>
                   </linearGradient>
-                  <linearGradient id="colorPrincipal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--brand-gold-light))" stopOpacity={0.9}/>
-                    <stop offset="95%" stopColor="hsl(var(--brand-gold))" stopOpacity={0.8}/>
+                  <linearGradient id="areaPrincipal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--brand-gold-light))" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="hsl(var(--brand-gold))" stopOpacity={0.6}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
@@ -450,12 +450,13 @@ export const ResultsDashboard = ({ results, loanData }) => {
                   tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
                 />
                 <Tooltip 
-                  formatter={(value) => [`₹${Math.round(value).toLocaleString('en-IN')}`, '']}
+                  formatter={(value, name) => [`₹${Math.round(value).toLocaleString('en-IN')}`, name]}
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--card))', 
                     border: '1px solid hsl(var(--border))', 
                     borderRadius: '12px',
-                    boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+                    boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                    color: 'hsl(var(--foreground))'
                   }}
                   labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600, marginBottom: '8px' }}
                 />
@@ -463,9 +464,25 @@ export const ResultsDashboard = ({ results, loanData }) => {
                   wrapperStyle={{ paddingTop: '20px' }}
                   iconType="circle"
                 />
-                <Bar dataKey="interest" fill="url(#colorInterest)" name="Interest Paid" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="principal" fill="url(#colorPrincipal)" name="Principal Paid" radius={[8, 8, 0, 0]} />
-              </BarChart>
+                <Area 
+                  type="monotone" 
+                  dataKey="interest" 
+                  stackId="1"
+                  stroke="#ef4444" 
+                  strokeWidth={2}
+                  fill="url(#areaInterest)" 
+                  name="Interest Paid" 
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="principal" 
+                  stackId="1"
+                  stroke="hsl(var(--brand-gold))" 
+                  strokeWidth={2}
+                  fill="url(#areaPrincipal)" 
+                  name="Principal Paid" 
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </TabsContent>
 

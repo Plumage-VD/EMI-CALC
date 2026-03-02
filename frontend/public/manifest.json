@@ -1,0 +1,16 @@
+{
+  "short_name": "Plumage Capital",
+  "name": "Plumage Capital Strategy Lab",
+  "description": "Loan repayment optimization and advisory simulation platform",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#D4AF37",
+  "background_color": "#ffffff"
+}
