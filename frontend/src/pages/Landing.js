@@ -70,7 +70,7 @@ const Landing = () => {
             >
               <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
                 <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-primary">Production-Ready Fintech Platform</span>
+                <span className="text-sm font-medium text-primary">Your Path to Financial Freedom Starts Here</span>
               </div>
               
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight">
@@ -85,8 +85,8 @@ const Landing = () => {
               </h2>
               
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-xl">
-                A production-ready loan repayment optimization platform designed for Indian borrowers. 
-                Simulate, strategize, and save lakhs in interest with our advanced planning engine.
+                Imagine paying off your home loan years earlier, saving lakhs in interest. 
+                Our intelligent simulator reveals the hidden potential in your repayment strategy.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
