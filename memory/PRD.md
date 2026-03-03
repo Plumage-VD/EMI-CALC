@@ -12,8 +12,8 @@ A production-ready fintech web application for Indian users to simulate and opti
 ## Tech Stack
 - **Frontend**: React (Create React App), Tailwind CSS, Recharts, Framer Motion
 - **Backend**: FastAPI (Python)
-- **Database**: MongoDB (currently stateless - not using DB for core simulation)
-- **Auth**: Mock auth system (Supabase integration pending)
+- **Database**: MongoDB (stateless for simulation) + Supabase (user auth)
+- **Auth**: Supabase Authentication (Email/Password + Google OAuth)
 
 ## Core Features
 
@@ -46,11 +46,16 @@ A production-ready fintech web application for Indian users to simulate and opti
    - **Final values summary** below chart (Original/Optimized/Net Cost)
    - **Clearer axes** with Y-axis label "Interest (₹)"
 
-### Authentication System (COMPLETE - MOCKED)
+### Indian Number Formatting (COMPLETE)
+- All currency displayed in lakhs (L) and crores (Cr) format
+- Example: ₹54.14 L instead of ₹5,413,879
+- Chart axes use compact notation: ₹50L, ₹1Cr
+
+### Authentication System (COMPLETE)
+- **Supabase Integration**: Real authentication with Email/Password + Google OAuth
+- **Phone Number Required**: All users must provide phone number (during signup or after Google OAuth)
 - **Auth Teaser**: Non-authenticated users see blurred preview of advanced features
 - **"Sign in to Unlock"** button triggers auth modal
-- **Auth Modal**: Google OAuth + Email/Password options (+ Phone required for signup)
-- **Mock Auth**: Currently simulated - ready for Supabase integration
 - **User Indicator**: Shows user name in navbar with sign-out option
 
 ### Export Features (COMPLETE)
@@ -64,6 +69,36 @@ A production-ready fintech web application for Indian users to simulate and opti
 - Responsive design
 - Glass-morphism effects
 - Magical, engaging homepage copy
+
+## Supabase Setup Required
+Run this SQL in Supabase SQL Editor to create the profiles table:
+
+```sql
+-- Create profiles table
+create table public.profiles (
+  id uuid not null references auth.users on delete cascade,
+  email text,
+  full_name text,
+  phone_number text,
+  avatar_url text,
+  created_at timestamp with time zone default timezone('utc'::text, now()),
+  updated_at timestamp with time zone default timezone('utc'::text, now()),
+  primary key (id)
+);
+
+-- Enable Row Level Security
+alter table public.profiles enable row level security;
+
+-- Policies
+create policy "Users can read own profile" on public.profiles
+  for select to authenticated using (auth.uid() = id);
+
+create policy "Users can update own profile" on public.profiles
+  for update to authenticated using (auth.uid() = id);
+
+create policy "Users can insert own profile" on public.profiles
+  for insert to authenticated with check (auth.uid() = id);
+```
 
 ## API Endpoints
 
@@ -86,19 +121,15 @@ Generates PDF summary report
 - [x] "Net Cost (Invest Strategy)" line with green benefit zone
 - [x] Excel and PDF export
 - [x] Premium UI with dark mode
-- [x] Auth teaser UI with mock auth system
+- [x] Supabase auth integration (Email/Password + Google OAuth)
+- [x] Phone number collection for all users
+- [x] Indian number formatting (lakhs/crores)
 - [x] Engaging homepage copy
 - [x] Full backend test suite (19 tests, 100% pass)
 
-### P0 - Next Priority
-- [ ] Integrate Supabase for real authentication
-  - User credentials needed: Project URL + Anon Key
-  - Enable: Email/Password + Google OAuth
-  - Required field: Phone number
-
 ### P1 - Upcoming
 - [ ] Tax Impact Module for home loans
-- [ ] Save/compare multiple loan scenarios (requires auth)
+- [ ] Save/compare multiple loan scenarios (requires DB)
 
 ### P2 - Future
 - [ ] Refinancing Analyzer page
@@ -110,8 +141,18 @@ Generates PDF summary report
 - `/app/frontend/src/components/simulator/ResultsDashboard.js` - Results display with charts
 - `/app/frontend/src/pages/EMISimulator.js` - Main simulator page
 - `/app/frontend/src/components/simulator/AdvancedOptionsToggle.js` - Auth-gated advanced options
-- `/app/frontend/src/components/AuthModal.js` - Authentication modal
-- `/app/frontend/src/context/AuthContext.js` - Auth state management
+- `/app/frontend/src/components/AuthModal.js` - Authentication modal (Supabase)
+- `/app/frontend/src/components/PhoneModal.js` - Phone collection for OAuth users
+- `/app/frontend/src/context/AuthContext.js` - Supabase auth state management
+- `/app/frontend/src/lib/supabaseClient.js` - Supabase client
+- `/app/frontend/src/lib/formatters.js` - Indian number formatting utilities
+
+## Environment Variables
+```
+# Frontend (.env)
+REACT_APP_SUPABASE_URL=https://zxmzlbdqwognncyjkymy.supabase.co
+REACT_APP_SUPABASE_ANON_KEY=eyJhbGci...
+```
 
 ## Testing
 - Backend: `/app/backend/tests/test_loan_simulation.py` (19 tests)

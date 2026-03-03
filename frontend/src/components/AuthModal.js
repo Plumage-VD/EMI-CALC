@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 
 export const AuthModal = () => {
-  const { showAuthModal, closeAuthModal, signIn } = useAuth();
+  const { showAuthModal, closeAuthModal, signUpWithEmail, signInWithEmail, signInWithGoogle } = useAuth();
   const [mode, setMode] = useState('signin'); // 'signin' | 'signup'
   const [formData, setFormData] = useState({
     email: '',
@@ -25,40 +25,41 @@ export const AuthModal = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate auth - will be replaced with Supabase later
-    setTimeout(() => {
-      if (mode === 'signup' && !formData.phone) {
-        toast.error('Phone number is required');
-        setLoading(false);
-        return;
+    try {
+      if (mode === 'signup') {
+        if (!formData.phone) {
+          toast.error('Phone number is required');
+          setLoading(false);
+          return;
+        }
+        
+        await signUpWithEmail(formData.email, formData.password, {
+          full_name: formData.name,
+          phone_number: formData.phone,
+        });
+        toast.success('Account created! Please check your email to verify.');
+        closeAuthModal();
+      } else {
+        await signInWithEmail(formData.email, formData.password);
+        toast.success('Welcome back!');
+        closeAuthModal();
       }
-
-      // Mock successful auth
-      signIn({
-        id: 'mock-user-' + Date.now(),
-        email: formData.email,
-        name: formData.name || formData.email.split('@')[0],
-        phone: formData.phone
-      });
-      
-      toast.success(mode === 'signin' ? 'Welcome back!' : 'Account created successfully!');
+    } catch (err) {
+      toast.error(err.message || 'Authentication failed');
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     setLoading(true);
-    // Simulate Google OAuth - will be replaced with Supabase later
-    setTimeout(() => {
-      signIn({
-        id: 'google-user-' + Date.now(),
-        email: 'user@gmail.com',
-        name: 'Google User',
-        provider: 'google'
-      });
-      toast.success('Signed in with Google!');
+    try {
+      await signInWithGoogle();
+      // Google OAuth will redirect, so no need to close modal
+    } catch (err) {
+      toast.error(err.message || 'Google sign-in failed');
       setLoading(false);
-    }, 800);
+    }
   };
 
   if (!showAuthModal) return null;
@@ -160,7 +161,7 @@ export const AuthModal = () => {
                   <input
                     type="tel"
                     name="phone"
-                    placeholder="Phone Number *"
+                    placeholder="Phone Number (e.g., +91 98765 43210)"
                     value={formData.phone}
                     onChange={handleInputChange}
                     className="w-full h-12 pl-11 pr-4 rounded-lg border border-border bg-background focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"

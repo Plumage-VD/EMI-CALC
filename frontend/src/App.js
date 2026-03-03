@@ -7,6 +7,7 @@ import { Toaster } from './components/ui/sonner';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import AuthModal from './components/AuthModal';
+import PhoneModal from './components/PhoneModal';
 import './App.css';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             </Routes>
             <Toaster position="top-center" richColors />
             <AuthModal />
+            <PhoneModal />
           </div>
         </Router>
       </AuthProvider>

@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { toast } from 'sonner';
+import { formatIndianCurrency, formatIndianNumber, formatChartAxis } from '../../lib/formatters';
 
 export const ResultsDashboard = ({ results, loanData }) => {
   const [exportingExcel, setExportingExcel] = useState(false);
@@ -292,10 +293,10 @@ export const ResultsDashboard = ({ results, loanData }) => {
           </div>
           <p className="text-sm text-muted-foreground mb-2">EMI Amount</p>
           <p className="text-3xl font-black bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent" data-testid="optimized-emi">
-            ₹{Math.round(optimized.emi).toLocaleString('en-IN')}
+            ₹{formatIndianNumber(Math.round(optimized.emi))}
           </p>
           <p className="text-xs text-muted-foreground mt-2">
-            vs ₹{Math.round(original.emi).toLocaleString('en-IN')} original
+            vs ₹{formatIndianNumber(Math.round(original.emi))} original
           </p>
         </Card>
 
@@ -328,10 +329,10 @@ export const ResultsDashboard = ({ results, loanData }) => {
           </div>
           <p className="text-sm text-muted-foreground mb-2">Interest Saved</p>
           <p className="text-3xl font-black text-green-600 dark:text-green-400" data-testid="interest-saved">
-            ₹{Math.round(savings.interest_saved).toLocaleString('en-IN')}
+            {formatIndianCurrency(savings.interest_saved)}
           </p>
           <p className="text-xs text-muted-foreground mt-2">
-            vs ₹{Math.round(original.total_interest).toLocaleString('en-IN')} original
+            vs {formatIndianCurrency(original.total_interest)} original
           </p>
         </Card>
 
@@ -346,7 +347,7 @@ export const ResultsDashboard = ({ results, loanData }) => {
           </div>
           <p className="text-sm text-muted-foreground mb-2">Prepayment Charges</p>
           <p className="text-3xl font-black text-purple-600 dark:text-purple-400" data-testid="prepayment-charges">
-            ₹{Math.round(optimized.prepayment_charges).toLocaleString('en-IN')}
+            ₹{formatIndianNumber(Math.round(optimized.prepayment_charges))}
           </p>
           <p className="text-xs text-muted-foreground mt-2">
             Total fees paid
@@ -370,8 +371,8 @@ export const ResultsDashboard = ({ results, loanData }) => {
             <tbody>
               <tr className="border-b border-border/50">
                 <td className="py-3 px-4 text-sm text-foreground">EMI</td>
-                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(original.emi).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(optimized.emi).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{formatIndianNumber(Math.round(original.emi))}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{formatIndianNumber(Math.round(optimized.emi))}</td>
                 <td className="py-3 px-4 text-sm text-right font-mono text-muted-foreground">-</td>
               </tr>
               <tr className="border-b border-border/50">
@@ -382,21 +383,21 @@ export const ResultsDashboard = ({ results, loanData }) => {
               </tr>
               <tr className="border-b border-border/50">
                 <td className="py-3 px-4 text-sm text-foreground">Total Interest</td>
-                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(original.total_interest).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(optimized.total_interest).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono text-green-600 dark:text-green-400">₹{Math.round(savings.interest_saved).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">{formatIndianCurrency(original.total_interest)}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">{formatIndianCurrency(optimized.total_interest)}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-green-600 dark:text-green-400">{formatIndianCurrency(savings.interest_saved)}</td>
               </tr>
               <tr className="border-b border-border/50">
                 <td className="py-3 px-4 text-sm text-foreground">Prepayment Charges</td>
                 <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹0</td>
-                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{Math.round(optimized.prepayment_charges).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono text-foreground">₹{formatIndianNumber(Math.round(optimized.prepayment_charges))}</td>
                 <td className="py-3 px-4 text-sm text-right font-mono text-muted-foreground">-</td>
               </tr>
               <tr className="bg-muted/30">
                 <td className="py-3 px-4 text-sm font-semibold text-foreground">Total Repayment</td>
-                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-foreground">₹{Math.round(original.total_repayment).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-foreground">₹{Math.round(optimized.total_repayment).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-green-600 dark:text-green-400">₹{Math.round(original.total_repayment - optimized.total_repayment).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-foreground">{formatIndianCurrency(original.total_repayment)}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-foreground">{formatIndianCurrency(optimized.total_repayment)}</td>
+                <td className="py-3 px-4 text-sm text-right font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(original.total_repayment - optimized.total_repayment)}</td>
               </tr>
             </tbody>
           </table>
@@ -432,15 +433,15 @@ export const ResultsDashboard = ({ results, loanData }) => {
                       <div className="grid grid-cols-3 gap-4 text-sm">
                         <div>
                           <p className="text-xs text-muted-foreground">Invested</p>
-                          <p className="font-mono font-semibold">₹{Math.round(investment_analysis.breakdown.emi_adjustment.invested).toLocaleString('en-IN')}</p>
+                          <p className="font-mono font-semibold">{formatIndianCurrency(investment_analysis.breakdown.emi_adjustment.invested)}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground">Future Value</p>
-                          <p className="font-mono font-semibold text-primary">₹{Math.round(investment_analysis.breakdown.emi_adjustment.future_value).toLocaleString('en-IN')}</p>
+                          <p className="font-mono font-semibold text-primary">{formatIndianCurrency(investment_analysis.breakdown.emi_adjustment.future_value)}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground">Gain</p>
-                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">₹{Math.round(investment_analysis.breakdown.emi_adjustment.gain).toLocaleString('en-IN')}</p>
+                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(investment_analysis.breakdown.emi_adjustment.gain)}</p>
                         </div>
                       </div>
                     </div>
@@ -457,15 +458,15 @@ export const ResultsDashboard = ({ results, loanData }) => {
                       <div className="grid grid-cols-3 gap-4 text-sm">
                         <div>
                           <p className="text-xs text-muted-foreground">Invested</p>
-                          <p className="font-mono font-semibold">₹{Math.round(investment_analysis.breakdown.periodic_payments.invested).toLocaleString('en-IN')}</p>
+                          <p className="font-mono font-semibold">{formatIndianCurrency(investment_analysis.breakdown.periodic_payments.invested)}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground">Future Value</p>
-                          <p className="font-mono font-semibold text-primary">₹{Math.round(investment_analysis.breakdown.periodic_payments.future_value).toLocaleString('en-IN')}</p>
+                          <p className="font-mono font-semibold text-primary">{formatIndianCurrency(investment_analysis.breakdown.periodic_payments.future_value)}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground">Gain</p>
-                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">₹{Math.round(investment_analysis.breakdown.periodic_payments.gain).toLocaleString('en-IN')}</p>
+                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(investment_analysis.breakdown.periodic_payments.gain)}</p>
                         </div>
                       </div>
                     </div>
@@ -482,15 +483,15 @@ export const ResultsDashboard = ({ results, loanData }) => {
                       <div className="grid grid-cols-3 gap-4 text-sm">
                         <div>
                           <p className="text-xs text-muted-foreground">Invested</p>
-                          <p className="font-mono font-semibold">₹{Math.round(investment_analysis.breakdown.adhoc_payments.invested).toLocaleString('en-IN')}</p>
+                          <p className="font-mono font-semibold">{formatIndianCurrency(investment_analysis.breakdown.adhoc_payments.invested)}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground">Future Value</p>
-                          <p className="font-mono font-semibold text-primary">₹{Math.round(investment_analysis.breakdown.adhoc_payments.future_value).toLocaleString('en-IN')}</p>
+                          <p className="font-mono font-semibold text-primary">{formatIndianCurrency(investment_analysis.breakdown.adhoc_payments.future_value)}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground">Gain</p>
-                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">₹{Math.round(investment_analysis.breakdown.adhoc_payments.gain).toLocaleString('en-IN')}</p>
+                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(investment_analysis.breakdown.adhoc_payments.gain)}</p>
                         </div>
                       </div>
                     </div>
@@ -503,7 +504,7 @@ export const ResultsDashboard = ({ results, loanData }) => {
                 <div>
                   <p className="text-sm mb-2">Total Investment Future Value</p>
                   <p className="text-3xl font-mono font-black bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
-                    ₹{Math.round(investment_analysis.investment_future_value).toLocaleString('en-IN')}
+                    {formatIndianCurrency(investment_analysis.investment_future_value)}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">If invested @ {investment_analysis.investment_return_rate}%</p>
                 </div>
@@ -511,7 +512,7 @@ export const ResultsDashboard = ({ results, loanData }) => {
                 <div>
                   <p className="text-sm mb-2">Interest Saved by Prepaying</p>
                   <p className="text-3xl font-mono font-black bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
-                    ₹{Math.round(savings.interest_saved).toLocaleString('en-IN')}
+                    {formatIndianCurrency(savings.interest_saved)}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">Guaranteed savings</p>
                 </div>
@@ -527,8 +528,8 @@ export const ResultsDashboard = ({ results, loanData }) => {
                 </div>
                 <p className={`text-sm ${investment_analysis.recommendation === 'Invest' ? 'text-green-800 dark:text-green-400' : 'text-blue-800 dark:text-blue-400'}`}>
                   {investment_analysis.recommendation === 'Invest' 
-                    ? `Investing your prepayments could yield ₹${Math.round(Math.abs(investment_analysis.difference)).toLocaleString('en-IN')} MORE than prepaying the loan.`
-                    : `Prepaying your loan saves you ₹${Math.round(Math.abs(investment_analysis.difference)).toLocaleString('en-IN')} MORE than investing at ${investment_analysis.investment_return_rate}% returns.`
+                    ? `Investing your prepayments could yield ${formatIndianCurrency(Math.abs(investment_analysis.difference))} MORE than prepaying the loan.`
+                    : `Prepaying your loan saves you ${formatIndianCurrency(Math.abs(investment_analysis.difference))} MORE than investing at ${investment_analysis.investment_return_rate}% returns.`
                   }
                 </p>
               </div>
@@ -575,10 +576,10 @@ export const ResultsDashboard = ({ results, loanData }) => {
                 <YAxis 
                   stroke="hsl(var(--muted-foreground))"
                   tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                  tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
+                  tickFormatter={(value) => formatChartAxis(value)}
                 />
                 <Tooltip 
-                  formatter={(value) => [`₹${Math.round(value).toLocaleString('en-IN')}`, '']}
+                  formatter={(value) => [formatIndianCurrency(value), '']}
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--card))', 
                     border: '1px solid hsl(var(--border))', 
@@ -635,10 +636,10 @@ export const ResultsDashboard = ({ results, loanData }) => {
                 <YAxis 
                   stroke="hsl(var(--muted-foreground))"
                   tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                  tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
+                  tickFormatter={(value) => formatChartAxis(value)}
                 />
                 <Tooltip 
-                  formatter={(value, name) => [`₹${Math.round(value).toLocaleString('en-IN')}`, name]}
+                  formatter={(value, name) => [formatIndianCurrency(value), name]}
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--card))', 
                     border: '1px solid hsl(var(--border))', 
@@ -714,15 +715,15 @@ export const ResultsDashboard = ({ results, loanData }) => {
                   tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
                   tickLine={{ stroke: 'hsl(var(--foreground))' }}
                   axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 1.5 }}
-                  tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
+                  tickFormatter={(value) => formatChartAxis(value)}
                   label={{ value: 'Interest (₹)', angle: -90, position: 'insideLeft', fill: 'hsl(var(--foreground))', fontWeight: 600 }}
                 />
                 <Tooltip 
                   formatter={(value, name) => {
                     if (name === 'Investment Gain') {
-                      return [`₹${Math.round(value).toLocaleString('en-IN')}`, 'Your Investment Gain'];
+                      return [formatIndianCurrency(value), 'Your Investment Gain'];
                     }
-                    return [`₹${Math.round(value).toLocaleString('en-IN')}`, name];
+                    return [formatIndianCurrency(value), name];
                   }}
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--card))', 
@@ -784,17 +785,17 @@ export const ResultsDashboard = ({ results, loanData }) => {
               <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="p-4 bg-muted/30 rounded-lg border border-border">
                   <p className="text-xs text-muted-foreground mb-1">Original Total Interest</p>
-                  <p className="text-xl font-bold font-mono">₹{cumulativeInterestData[cumulativeInterestData.length-1]?.original.toLocaleString('en-IN')}</p>
+                  <p className="text-xl font-bold font-mono">{formatIndianCurrency(cumulativeInterestData[cumulativeInterestData.length-1]?.original)}</p>
                 </div>
                 <div className="p-4 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-800">
                   <p className="text-xs text-amber-700 dark:text-amber-400 mb-1">With Prepayments</p>
-                  <p className="text-xl font-bold font-mono text-amber-700 dark:text-amber-400">₹{cumulativeInterestData[cumulativeInterestData.length-1]?.optimized.toLocaleString('en-IN')}</p>
+                  <p className="text-xl font-bold font-mono text-amber-700 dark:text-amber-400">{formatIndianCurrency(cumulativeInterestData[cumulativeInterestData.length-1]?.optimized)}</p>
                 </div>
                 <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg border border-emerald-200 dark:border-emerald-800">
                   <p className="text-xs text-emerald-700 dark:text-emerald-400 mb-1">Net Cost (Invest Strategy)</p>
-                  <p className="text-xl font-bold font-mono text-emerald-700 dark:text-emerald-400">₹{cumulativeInterestData[cumulativeInterestData.length-1]?.netAfterInvestment.toLocaleString('en-IN')}</p>
+                  <p className="text-xl font-bold font-mono text-emerald-700 dark:text-emerald-400">{formatIndianCurrency(cumulativeInterestData[cumulativeInterestData.length-1]?.netAfterInvestment)}</p>
                   <p className="text-xs text-emerald-600 dark:text-emerald-500 mt-1">
-                    Investment gain: ₹{cumulativeInterestData[cumulativeInterestData.length-1]?.investmentGain.toLocaleString('en-IN')}
+                    Investment gain: {formatIndianCurrency(cumulativeInterestData[cumulativeInterestData.length-1]?.investmentGain)}
                   </p>
                 </div>
               </div>
@@ -803,8 +804,8 @@ export const ResultsDashboard = ({ results, loanData }) => {
             {investment_analysis.enabled && investment_analysis.recommendation === 'Invest' && (
               <div className="mt-4 p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg">
                 <p className="text-sm text-emerald-800 dark:text-emerald-300">
-                  <strong>Net Benefit:</strong> At loan end, investing saves you an additional ₹{Math.round(Math.abs(investment_analysis.difference)).toLocaleString('en-IN')} compared to prepaying, 
-                  because your investment returns (₹{Math.round(investment_analysis.investment_future_value - investment_analysis.total_prepayments).toLocaleString('en-IN')}) exceed the extra interest paid.
+                  <strong>Net Benefit:</strong> At loan end, investing saves you an additional {formatIndianCurrency(Math.abs(investment_analysis.difference))} compared to prepaying, 
+                  because your investment returns ({formatIndianCurrency(investment_analysis.investment_future_value - investment_analysis.total_prepayments)}) exceed the extra interest paid.
                 </p>
               </div>
             )}
@@ -822,7 +823,7 @@ export const ResultsDashboard = ({ results, loanData }) => {
             <div>
               <h3 className="text-lg font-bold text-emerald-900 mb-2">Financial Advisory</h3>
               <p className="text-sm text-emerald-800 leading-relaxed">
-                By implementing this optimized repayment strategy, you can save <strong>₹{Math.round(savings.interest_saved).toLocaleString('en-IN')}</strong> in interest 
+                By implementing this optimized repayment strategy, you can save <strong>{formatIndianCurrency(savings.interest_saved)}</strong> in interest 
                 and become loan-free <strong>{savings.years_saved} years</strong> earlier. This is a significant financial achievement that puts you on the path to true financial freedom. 
                 Consider setting up automatic transfers for your periodic prepayments to stay on track.
               </p>
