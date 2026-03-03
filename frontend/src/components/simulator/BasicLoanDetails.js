@@ -94,9 +94,9 @@ export const BasicLoanDetails = ({
             />
             <p className="text-xs text-stone-500">
               {loanAmount >= 10000000 
-                ? `₹${(loanAmount / 10000000).toFixed(2)} Crores`
+                ? `${(loanAmount / 10000000).toFixed(2)} Crores`
                 : loanAmount >= 100000 
-                  ? `₹${(loanAmount / 100000).toFixed(2)} Lakhs`
+                  ? `${(loanAmount / 100000).toFixed(2)} Lakhs`
                   : ''}
             </p>
           </div>

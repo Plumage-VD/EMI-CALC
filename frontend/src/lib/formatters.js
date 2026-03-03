@@ -1,27 +1,27 @@
 /**
  * Format number in Indian numbering system (lakhs and crores)
  * @param {number} num - The number to format
- * @param {boolean} showDecimal - Whether to show decimal places
+ * @param {boolean} abbreviated - Whether to use L/Cr abbreviations
  * @returns {string} Formatted string like "₹54,13,879" or "₹1.2 Cr"
  */
-export const formatIndianCurrency = (num, showDecimal = false) => {
+export const formatIndianCurrency = (num, abbreviated = false) => {
   if (num === null || num === undefined || isNaN(num)) return '₹0';
   
   const absNum = Math.abs(num);
   const sign = num < 0 ? '-' : '';
   
-  // For very large numbers, use Cr/L notation
-  if (absNum >= 10000000) {
-    // Crores (1 Cr = 10,000,000)
-    const crores = absNum / 10000000;
-    return `${sign}₹${crores.toFixed(2)} Cr`;
-  } else if (absNum >= 100000) {
-    // Lakhs (1 L = 100,000)
-    const lakhs = absNum / 100000;
-    return `${sign}₹${lakhs.toFixed(2)} L`;
+  if (abbreviated) {
+    // Abbreviated format for charts only
+    if (absNum >= 10000000) {
+      const crores = absNum / 10000000;
+      return `${sign}₹${crores.toFixed(2)} Cr`;
+    } else if (absNum >= 100000) {
+      const lakhs = absNum / 100000;
+      return `${sign}₹${lakhs.toFixed(2)} L`;
+    }
   }
   
-  // For smaller numbers, use full Indian format
+  // Full Indian format with commas
   return `${sign}₹${formatIndianNumber(Math.round(absNum))}`;
 };
 
