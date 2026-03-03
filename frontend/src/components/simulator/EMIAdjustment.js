@@ -6,6 +6,7 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Slider } from '../ui/slider';
 import { NumericFormat } from 'react-number-format';
+import { formatIndianCurrency, formatIndianNumber } from '../../lib/formatters';
 
 export const EMIAdjustment = ({ adjustedEmi, setAdjustedEmi, loanAmount, interestRate, tenureYears }) => {
   // Calculate standard EMI
@@ -47,7 +48,7 @@ export const EMIAdjustment = ({ adjustedEmi, setAdjustedEmi, loanAmount, interes
             <div className="flex justify-between items-center">
               <Label className="text-sm font-medium text-stone-700">Adjusted EMI (₹)</Label>
               <span className="text-xs text-stone-500 font-mono">
-                Standard: ₹{standardEMI.toLocaleString('en-IN')}
+                Standard: ₹{formatIndianNumber(standardEMI)}
               </span>
             </div>
             
@@ -64,10 +65,11 @@ export const EMIAdjustment = ({ adjustedEmi, setAdjustedEmi, loanAmount, interes
             <NumericFormat
               value={adjustedEmi}
               onValueChange={(values) => setAdjustedEmi(values.value)}
+              thousandsGroupStyle="lakh"
               thousandSeparator=","
               prefix="₹ "
               customInput={Input}
-              placeholder={`₹ ${standardEMI.toLocaleString('en-IN')}`}
+              placeholder={`₹ ${formatIndianNumber(standardEMI)}`}
               className="h-12 rounded-lg border-stone-300 focus:ring-2 focus:ring-emerald-900/20 focus:border-emerald-900"
               data-testid="adjusted-emi-input"
             />
@@ -79,7 +81,7 @@ export const EMIAdjustment = ({ adjustedEmi, setAdjustedEmi, loanAmount, interes
               <div>
                 <p className="text-sm font-medium text-red-900">Invalid EMI Amount</p>
                 <p className="text-xs text-red-700 mt-1">
-                  Adjusted EMI must be greater than or equal to the standard EMI of ₹{standardEMI.toLocaleString('en-IN')}
+                  Adjusted EMI must be greater than or equal to the standard EMI of ₹{formatIndianNumber(standardEMI)}
                 </p>
               </div>
             </div>
@@ -88,7 +90,7 @@ export const EMIAdjustment = ({ adjustedEmi, setAdjustedEmi, loanAmount, interes
           {adjustedEmi && isValid && parseFloat(adjustedEmi) > standardEMI && (
             <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4" data-testid="emi-increase-info">
               <p className="text-sm font-medium text-emerald-900">
-                Extra payment per month: ₹{(parseFloat(adjustedEmi) - standardEMI).toLocaleString('en-IN')}
+                Extra payment per month: ₹{formatIndianNumber(parseFloat(adjustedEmi) - standardEMI)}
               </p>
               <p className="text-xs text-emerald-700 mt-1">
                 This will significantly reduce your loan tenure and interest burden

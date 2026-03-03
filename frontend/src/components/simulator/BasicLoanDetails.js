@@ -6,6 +6,24 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { NumericFormat } from 'react-number-format';
+import { formatIndianCurrency } from '../../lib/formatters';
+
+// Custom function for Indian thousand separator (XX,XX,XXX format)
+const indianThousandSeparator = (numStr) => {
+  const num = numStr.replace(/,/g, '');
+  if (num.length <= 3) return num;
+  
+  let result = num.slice(-3);
+  let remaining = num.slice(0, -3);
+  
+  while (remaining.length > 0) {
+    const chunk = remaining.slice(-2);
+    remaining = remaining.slice(0, -2);
+    result = chunk + ',' + result;
+  }
+  
+  return result;
+};
 
 export const BasicLoanDetails = ({
   loanAmount,
@@ -37,6 +55,13 @@ export const BasicLoanDetails = ({
   const totalRepayment = standardEMI * tenureYears * 12;
   const totalInterest = totalRepayment - loanAmount;
 
+  // Format display value for loan amount input with Indian separators
+  const formatLoanDisplay = (value) => {
+    if (!value) return '';
+    const numStr = String(Math.round(value));
+    return indianThousandSeparator(numStr);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -60,12 +85,20 @@ export const BasicLoanDetails = ({
               id="loanAmount"
               value={loanAmount}
               onValueChange={(values) => setLoanAmount(values.floatValue || 0)}
+              thousandsGroupStyle="lakh"
               thousandSeparator=","
               prefix="₹ "
               customInput={Input}
               className="h-12 rounded-lg border-stone-300 focus:ring-2 focus:ring-emerald-900/20 focus:border-emerald-900"
               data-testid="loan-amount-input"
             />
+            <p className="text-xs text-stone-500">
+              {loanAmount >= 10000000 
+                ? `₹${(loanAmount / 10000000).toFixed(2)} Crores`
+                : loanAmount >= 100000 
+                  ? `₹${(loanAmount / 100000).toFixed(2)} Lakhs`
+                  : ''}
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -135,6 +168,7 @@ export const BasicLoanDetails = ({
               id="processingFee"
               value={processingFee}
               onValueChange={(values) => setProcessingFee(values.floatValue || 0)}
+              thousandsGroupStyle="lakh"
               thousandSeparator=","
               prefix="₹ "
               customInput={Input}
@@ -151,19 +185,19 @@ export const BasicLoanDetails = ({
             <div className="bg-stone-50 rounded-lg p-4">
               <p className="text-xs text-stone-600 mb-1">Standard EMI</p>
               <p className="text-xl font-mono font-bold text-emerald-900" data-testid="standard-emi-display">
-                ₹{standardEMI.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                {formatIndianCurrency(standardEMI)}
               </p>
             </div>
             <div className="bg-stone-50 rounded-lg p-4">
               <p className="text-xs text-stone-600 mb-1">Total Interest</p>
               <p className="text-xl font-mono font-bold text-stone-900" data-testid="total-interest-display">
-                ₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                {formatIndianCurrency(totalInterest)}
               </p>
             </div>
             <div className="bg-stone-50 rounded-lg p-4">
               <p className="text-xs text-stone-600 mb-1">Total Repayment</p>
               <p className="text-xl font-mono font-bold text-stone-900" data-testid="total-repayment-display">
-                ₹{totalRepayment.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                {formatIndianCurrency(totalRepayment)}
               </p>
             </div>
           </div>

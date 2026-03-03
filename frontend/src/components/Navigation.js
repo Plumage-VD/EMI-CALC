@@ -8,7 +8,16 @@ import { useAuth } from '../context/AuthContext';
 export const Navigation = ({ showCTA = true }) => {
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
-  const { isAuthenticated, user, signOut, openAuthModal } = useAuth();
+  const { isAuthenticated, user, profile, signOut, openAuthModal } = useAuth();
+
+  // Get display name from profile first, then user metadata, then email
+  const getDisplayName = () => {
+    if (profile?.full_name) return profile.full_name;
+    if (user?.user_metadata?.full_name) return user.user_metadata.full_name;
+    if (user?.user_metadata?.name) return user.user_metadata.name;
+    if (user?.email) return user.email.split('@')[0];
+    return 'User';
+  };
 
   return (
     <nav className="fixed top-0 w-full z-50 glass-nav">
@@ -62,8 +71,8 @@ export const Navigation = ({ showCTA = true }) => {
               <div className="flex items-center space-x-2">
                 <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-muted/50 border border-border">
                   <User className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium truncate max-w-[100px]">
-                    {user?.name || user?.email?.split('@')[0]}
+                  <span className="text-sm font-medium truncate max-w-[120px]">
+                    {getDisplayName()}
                   </span>
                 </div>
                 <Button
