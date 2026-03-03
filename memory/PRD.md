@@ -130,13 +130,15 @@ Generates PDF summary report
 - [x] Full backend test suite (19 tests, 100% pass)
 
 ### P1 - Upcoming
-- [ ] Tax Impact Module for home loans
 - [ ] Save/compare multiple loan scenarios (requires DB)
 
 ### P2 - Future
 - [ ] Refinancing Analyzer page
 - [ ] Rent-vs-Buy Calculator page
 - [ ] Premium features/monetization
+
+### Intentionally Skipped
+- **Tax Impact Module for Home Loans**: Not implemented as most individuals use the new tax regime under Income Tax Act 2025, which does not provide Section 80C benefits or similar deductions for home loan interest/principal.
 
 ## Key Files
 - `/app/backend/services/loan_simulator.py` - Core simulation engine
