@@ -32,8 +32,10 @@ A production-ready fintech web application for Indian users to simulate and opti
 ### Prepay vs Invest Module (COMPLETE)
 - Compare prepaying loan vs investing the same amounts
 - Investment future value calculation with configurable return rate
-- **Breakdown by source**: EMI adjustment, periodic payments, adhoc payments (each tracked independently)
-- Clear recommendation: Prepay or Invest
+- **20% Tax on Investment Gains**: Applied automatically to all investment returns
+- **Breakdown by source**: EMI adjustment, periodic payments, adhoc payments (each showing pre-tax, tax, and post-tax values)
+- Clear recommendation: Prepay or Invest (considering tax impact)
+- **Disclaimer**: Tax rates can vary 10-40% based on investment type and holding period; analysis assumes investment held until loan maturity
 
 ### Visualizations (COMPLETE)
 1. **Outstanding Balance Chart**: Area chart comparing original vs optimized loan balance over time

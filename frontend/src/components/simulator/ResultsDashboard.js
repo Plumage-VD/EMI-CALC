@@ -420,7 +420,12 @@ export const ResultsDashboard = ({ results, loanData }) => {
               {/* Breakdown by Source */}
               {investment_analysis.breakdown && (
                 <div className="mb-6 space-y-3">
-                  <h4 className="font-semibold text-sm mb-3">Investment Returns Breakdown:</h4>
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-semibold text-sm">Investment Returns Breakdown:</h4>
+                    <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-2 py-1 rounded-full">
+                      After {investment_analysis.tax_rate || 20}% Tax
+                    </span>
+                  </div>
                   
                   {investment_analysis.breakdown.emi_adjustment.invested > 0 && (
                     <div className="p-4 bg-muted/30 rounded-lg border border-border">
@@ -430,18 +435,22 @@ export const ResultsDashboard = ({ results, loanData }) => {
                           Extra EMI payments
                         </span>
                       </div>
-                      <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div className="grid grid-cols-4 gap-3 text-sm">
                         <div>
                           <p className="text-xs text-muted-foreground">Invested</p>
                           <p className="font-mono font-semibold">{formatIndianCurrency(investment_analysis.breakdown.emi_adjustment.invested)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Future Value</p>
-                          <p className="font-mono font-semibold text-primary">{formatIndianCurrency(investment_analysis.breakdown.emi_adjustment.future_value)}</p>
+                          <p className="text-xs text-muted-foreground">Gross Gain</p>
+                          <p className="font-mono font-semibold text-muted-foreground">{formatIndianCurrency(investment_analysis.breakdown.emi_adjustment.gain_pretax || investment_analysis.breakdown.emi_adjustment.gain)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Gain</p>
-                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(investment_analysis.breakdown.emi_adjustment.gain)}</p>
+                          <p className="text-xs text-muted-foreground">Tax ({investment_analysis.tax_rate || 20}%)</p>
+                          <p className="font-mono font-semibold text-red-500">-{formatIndianCurrency(investment_analysis.breakdown.emi_adjustment.tax || 0)}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Net Value</p>
+                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(investment_analysis.breakdown.emi_adjustment.future_value)}</p>
                         </div>
                       </div>
                     </div>
@@ -455,18 +464,22 @@ export const ResultsDashboard = ({ results, loanData }) => {
                           Recurring prepayments
                         </span>
                       </div>
-                      <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div className="grid grid-cols-4 gap-3 text-sm">
                         <div>
                           <p className="text-xs text-muted-foreground">Invested</p>
                           <p className="font-mono font-semibold">{formatIndianCurrency(investment_analysis.breakdown.periodic_payments.invested)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Future Value</p>
-                          <p className="font-mono font-semibold text-primary">{formatIndianCurrency(investment_analysis.breakdown.periodic_payments.future_value)}</p>
+                          <p className="text-xs text-muted-foreground">Gross Gain</p>
+                          <p className="font-mono font-semibold text-muted-foreground">{formatIndianCurrency(investment_analysis.breakdown.periodic_payments.gain_pretax || investment_analysis.breakdown.periodic_payments.gain)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Gain</p>
-                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(investment_analysis.breakdown.periodic_payments.gain)}</p>
+                          <p className="text-xs text-muted-foreground">Tax ({investment_analysis.tax_rate || 20}%)</p>
+                          <p className="font-mono font-semibold text-red-500">-{formatIndianCurrency(investment_analysis.breakdown.periodic_payments.tax || 0)}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Net Value</p>
+                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(investment_analysis.breakdown.periodic_payments.future_value)}</p>
                         </div>
                       </div>
                     </div>
@@ -480,19 +493,35 @@ export const ResultsDashboard = ({ results, loanData }) => {
                           One-time payments
                         </span>
                       </div>
-                      <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div className="grid grid-cols-4 gap-3 text-sm">
                         <div>
                           <p className="text-xs text-muted-foreground">Invested</p>
                           <p className="font-mono font-semibold">{formatIndianCurrency(investment_analysis.breakdown.adhoc_payments.invested)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Future Value</p>
-                          <p className="font-mono font-semibold text-primary">{formatIndianCurrency(investment_analysis.breakdown.adhoc_payments.future_value)}</p>
+                          <p className="text-xs text-muted-foreground">Gross Gain</p>
+                          <p className="font-mono font-semibold text-muted-foreground">{formatIndianCurrency(investment_analysis.breakdown.adhoc_payments.gain_pretax || investment_analysis.breakdown.adhoc_payments.gain)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Gain</p>
-                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(investment_analysis.breakdown.adhoc_payments.gain)}</p>
+                          <p className="text-xs text-muted-foreground">Tax ({investment_analysis.tax_rate || 20}%)</p>
+                          <p className="font-mono font-semibold text-red-500">-{formatIndianCurrency(investment_analysis.breakdown.adhoc_payments.tax || 0)}</p>
                         </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Net Value</p>
+                          <p className="font-mono font-semibold text-green-600 dark:text-green-400">{formatIndianCurrency(investment_analysis.breakdown.adhoc_payments.future_value)}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Tax Summary */}
+                  {investment_analysis.total_tax_payable > 0 && (
+                    <div className="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-800">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-amber-800 dark:text-amber-300">Total Tax on Investment Gains</span>
+                        <span className="font-mono font-semibold text-amber-800 dark:text-amber-300">
+                          {formatIndianCurrency(investment_analysis.total_tax_payable)}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -502,11 +531,18 @@ export const ResultsDashboard = ({ results, loanData }) => {
               {/* Summary */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 bg-primary/5 rounded-lg border-2 border-primary/20">
                 <div>
-                  <p className="text-sm mb-2">Total Investment Future Value</p>
+                  <p className="text-sm mb-2">Investment Value (After Tax)</p>
                   <p className="text-3xl font-mono font-black bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
                     {formatIndianCurrency(investment_analysis.investment_future_value)}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">If invested @ {investment_analysis.investment_return_rate}%</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    @ {investment_analysis.investment_return_rate}% returns, {investment_analysis.tax_rate || 20}% tax
+                  </p>
+                  {investment_analysis.investment_future_value_pretax && (
+                    <p className="text-xs text-muted-foreground">
+                      Pre-tax: {formatIndianCurrency(investment_analysis.investment_future_value_pretax)}
+                    </p>
+                  )}
                 </div>
                 
                 <div>
@@ -514,7 +550,7 @@ export const ResultsDashboard = ({ results, loanData }) => {
                   <p className="text-3xl font-mono font-black bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-light))] bg-clip-text text-transparent">
                     {formatIndianCurrency(savings.interest_saved)}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">Guaranteed savings</p>
+                  <p className="text-xs text-muted-foreground mt-1">Guaranteed savings (tax-free)</p>
                 </div>
               </div>
 
@@ -528,9 +564,21 @@ export const ResultsDashboard = ({ results, loanData }) => {
                 </div>
                 <p className={`text-sm ${investment_analysis.recommendation === 'Invest' ? 'text-green-800 dark:text-green-400' : 'text-blue-800 dark:text-blue-400'}`}>
                   {investment_analysis.recommendation === 'Invest' 
-                    ? `Investing your prepayments could yield ${formatIndianCurrency(Math.abs(investment_analysis.difference))} MORE than prepaying the loan.`
-                    : `Prepaying your loan saves you ${formatIndianCurrency(Math.abs(investment_analysis.difference))} MORE than investing at ${investment_analysis.investment_return_rate}% returns.`
+                    ? `Investing (after ${investment_analysis.tax_rate || 20}% tax) could yield ${formatIndianCurrency(Math.abs(investment_analysis.difference))} MORE than prepaying.`
+                    : `Prepaying saves you ${formatIndianCurrency(Math.abs(investment_analysis.difference))} MORE than investing at ${investment_analysis.investment_return_rate}% (after tax).`
                   }
+                </p>
+              </div>
+              
+              {/* Disclaimer */}
+              <div className="mt-4 p-4 bg-slate-100 dark:bg-slate-900/50 rounded-lg border border-slate-300 dark:border-slate-700">
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                  <strong className="text-slate-700 dark:text-slate-300">Disclaimer:</strong> The tax rate used ({investment_analysis.tax_rate || 20}%) is indicative. 
+                  Actual tax rates may vary from <strong>10% to 40%</strong> (Maximum Marginal Rate including Surcharge & Cess) 
+                  depending on the investment type, holding period, and your income tax slab. 
+                  This analysis assumes the investment remains until the end of the original loan tenure and is withdrawn only at maturity. 
+                  <strong> In case of early withdrawals, actual returns and tax implications may vary significantly.</strong> 
+                  Please consult a qualified tax advisor for personalized advice.
                 </p>
               </div>
             </div>

@@ -389,29 +389,62 @@ class LoanSimulator:
             except:
                 pass
         
-        total_investment_value = emi_adjustment_fv + periodic_payments_fv + adhoc_payments_fv
+        # Calculate totals before tax
+        total_investment_value_pretax = emi_adjustment_fv + periodic_payments_fv + adhoc_payments_fv
         total_prepayments = emi_adjustment_total + periodic_payments_total + adhoc_payments_total
+        
+        # Calculate gains and apply 20% tax
+        TAX_RATE = Decimal('0.20')  # 20% tax on investment gains
+        
+        emi_gain = emi_adjustment_fv - emi_adjustment_total
+        periodic_gain = periodic_payments_fv - periodic_payments_total
+        adhoc_gain = adhoc_payments_fv - adhoc_payments_total
+        
+        emi_gain_after_tax = emi_gain * (1 - TAX_RATE)
+        periodic_gain_after_tax = periodic_gain * (1 - TAX_RATE)
+        adhoc_gain_after_tax = adhoc_gain * (1 - TAX_RATE)
+        
+        emi_fv_after_tax = emi_adjustment_total + emi_gain_after_tax
+        periodic_fv_after_tax = periodic_payments_total + periodic_gain_after_tax
+        adhoc_fv_after_tax = adhoc_payments_total + adhoc_gain_after_tax
+        
+        total_investment_value = emi_fv_after_tax + periodic_fv_after_tax + adhoc_fv_after_tax
+        total_gain_pretax = total_investment_value_pretax - total_prepayments
+        total_tax = total_gain_pretax * TAX_RATE
+        total_gain_after_tax = total_gain_pretax - total_tax
         
         return {
             'enabled': True,
             'total_prepayments': float(total_prepayments),
             'investment_return_rate': float(self.investment_return),
             'investment_future_value': float(total_investment_value),
+            'investment_future_value_pretax': float(total_investment_value_pretax),
+            'tax_rate': float(TAX_RATE * 100),  # 20%
+            'total_tax_payable': float(total_tax),
             'breakdown': {
                 'emi_adjustment': {
                     'invested': float(emi_adjustment_total),
-                    'future_value': float(emi_adjustment_fv),
-                    'gain': float(emi_adjustment_fv - emi_adjustment_total)
+                    'future_value': float(emi_fv_after_tax),
+                    'future_value_pretax': float(emi_adjustment_fv),
+                    'gain_pretax': float(emi_gain),
+                    'tax': float(emi_gain * TAX_RATE),
+                    'gain': float(emi_gain_after_tax)
                 },
                 'periodic_payments': {
                     'invested': float(periodic_payments_total),
-                    'future_value': float(periodic_payments_fv),
-                    'gain': float(periodic_payments_fv - periodic_payments_total)
+                    'future_value': float(periodic_fv_after_tax),
+                    'future_value_pretax': float(periodic_payments_fv),
+                    'gain_pretax': float(periodic_gain),
+                    'tax': float(periodic_gain * TAX_RATE),
+                    'gain': float(periodic_gain_after_tax)
                 },
                 'adhoc_payments': {
                     'invested': float(adhoc_payments_total),
-                    'future_value': float(adhoc_payments_fv),
-                    'gain': float(adhoc_payments_fv - adhoc_payments_total)
+                    'future_value': float(adhoc_fv_after_tax),
+                    'future_value_pretax': float(adhoc_payments_fv),
+                    'gain_pretax': float(adhoc_gain),
+                    'tax': float(adhoc_gain * TAX_RATE),
+                    'gain': float(adhoc_gain_after_tax)
                 }
             }
         }
